@@ -1,0 +1,172 @@
+================================================================
+ PANDUAN PENGISIAN KONTEN — PANEL ADMIN orangpuncak.com
+================================================================
+Dokumen ini menjelaskan cara mengisi setiap kolom di panel admin
+agar data tampil benar & rapi di situs. Untuk panduan ukuran/format
+GAMBAR, lihat file terpisah: PANDUAN-GAMBAR.txt
+
+Akses panel: buka /admin -> login dengan email & password admin.
+Menu: Dashboard | Direktori | Artikel | Leads Iklan
+
+================================================================
+ ATURAN FORMAT PENTING (BERLAKU UMUM)
+================================================================
+- HARGA: isi ANGKA POLOS tanpa titik, koma, atau "Rp".
+    Contoh BENAR : 1500000
+    Contoh SALAH : Rp 1.500.000  /  1.500.000  /  1500.000
+    Sistem otomatis menampilkannya menjadi "Rp 1.500.000".
+- SLUG: bagian URL. Kosongkan saja -> dibuat otomatis dari nama/judul.
+    Jika diisi: huruf kecil semua, pakai tanda hubung, tanpa spasi/
+    simbol. Contoh: "villa-kabut-pagi-cisarua".
+- LOKASI: tulis konsisten (dipakai untuk filter). Pakai nama daerah
+    baku, mis: Cisarua, Megamendung, Cipanas, Puncak Pass.
+- NOMOR WHATSAPP: format internasional tanpa "+" atau "0" depan.
+    Contoh: 6281234567890. Kosongkan untuk memakai nomor default situs.
+- CENTANG "Tampilkan (published)": WAJIB dicentang agar konten muncul
+    di situs publik. Jika tidak dicentang = tersimpan tapi tersembunyi
+    (draft).
+- Tunggu pratinjau gambar muncul sebelum menekan Simpan/Perbarui.
+
+================================================================
+ 1. DASHBOARD
+================================================================
+Hanya ringkasan jumlah (villa, wisata, kuliner, artikel, leads).
+Tidak ada yang diisi di sini. Klik kartu untuk menuju daftar terkait.
+
+================================================================
+ 2. DIREKTORI (Villa / Wisata / Kuliner)
+================================================================
+Menu "Direktori" -> tombol "+ Tambah" (atau "Edit" pada baris).
+Pilih TIPE dulu; kolom yang muncul menyesuaikan tipe.
+
+----- 2.1 INFORMASI DASAR (semua tipe) -----
+- Tipe*        : Wisata / Villa / Kuliner. (WAJIB, menentukan kolom lain)
+- Kode         : kode unik item. WAJIB untuk Villa (dipakai di URL
+                 /villa/KODE dan pesan WhatsApp). Contoh: VP-001, WP-002.
+                 Untuk wisata/kuliner boleh diisi (mis. WP-001) atau kosong.
+- Nama*        : nama tempat. (WAJIB)
+- Slug         : kosongkan (otomatis). Lihat aturan SLUG di atas.
+- Kategori     : label pengelompokan, mis: "Villa Keluarga",
+                 "Wisata Alam", "Cafe & Resto". Konsisten.
+- Lokasi       : daerah (dipakai filter). Mis: Cisarua.
+- Alamat       : alamat lengkap (tampil di halaman detail).
+- Latitude/Longitude : koordinat untuk peta Google. Ambil dari Google
+                 Maps (klik kanan titik -> angka pertama=lat, kedua=lng).
+                 Kosongkan -> peta memakai Alamat.
+- WhatsApp     : nomor khusus item ini (opsional). Lihat aturan nomor.
+- Video YouTube: tempel link YouTube (opsional). Tampil di detail villa.
+- Deskripsi singkat : 1-2 kalimat ringkas (muncul di ringkasan & SEO).
+- Konten       : penjelasan panjang. Boleh tag HTML sederhana
+                 (<p>, <ul>, <b>). Boleh dikosongkan jika sudah ada deskripsi.
+- Centang:
+    Promo      : tampilkan badge "Promo". (lihat aturan HARGA PROMO di 2.4)
+    Unggulan   : tampilkan di bagian "Pilihan Unggulan" di Beranda.
+    Tampilkan  : publikasikan ke situs (WAJIB dicentang agar tampil).
+
+----- 2.2 GAMBAR -----
+- Cover        : 1 gambar utama (kartu & banner). Rasio 4:3. WAJIB ada.
+- Galeri       : beberapa foto (4-10). Lihat PANDUAN-GAMBAR.txt.
+
+----- 2.3 KOLOM KHUSUS WISATA -----
+- Jam Buka     : teks bebas. Contoh: "08.00 - 17.00 WIB".
+- Harga Tiket (HTM) : teks bebas. Contoh: "Rp 25.000" atau
+                 "Rp 25.000 - Rp 50.000". (kolom ini teks, boleh pakai Rp)
+- Tips         : tips kunjungan (tampil di kotak khusus).
+
+----- 2.3b KOLOM KHUSUS KULINER -----
+- Jam Buka     : teks bebas. Contoh: "10.00 - 22.00 WIB".
+- Kisaran Harga: teks bebas. Contoh: "Rp 25.000 - Rp 80.000".
+
+----- 2.4 KOLOM KHUSUS VILLA -----
+- Status*      : "Disewakan" atau "Dijual". (WAJIB; menentukan kolom harga)
+- Kamar Tidur / Kamar Mandi / Jumlah Lantai / Kapasitas : isi ANGKA.
+    (Kapasitas = jumlah maksimal orang.)
+
+  Jika Status = DISEWAKAN:
+    - Harga Weekday  : angka polos, harga sewa per malam (Sen-Jum).
+    - Harga Weekend  : angka polos, harga sewa per malam (Sab-Min/libur).
+    - Promo Weekday  : isi HANYA jika sedang promo (angka polos).
+    - Promo Weekend  : isi HANYA jika sedang promo (angka polos).
+
+  Jika Status = DIJUAL:
+    - Harga Jual     : angka polos, harga jual villa.
+    - Harga Promo    : isi HANYA jika sedang promo (angka polos).
+    - Luas Tanah     : angka, dalam m2.
+    - Luas Bangunan  : angka, dalam m2.
+    - Kamar ART      : angka.
+    - Centang SHM    : jika bersertifikat SHM.
+
+  ATURAN PROMO (PENTING):
+    - Agar harga coret + harga promo tampil, kamu harus:
+        (1) centang "Promo" di Informasi Dasar, DAN
+        (2) isi kolom promo yang sesuai:
+            * Disewakan -> Promo Weekday & Promo Weekend
+            * Dijual    -> Harga Promo
+    - Jika "Promo" dicentang tapi kolom promo kosong -> yang tampil
+      tetap harga normal (tidak ada coretan).
+    - Jika "Promo" TIDAK dicentang -> kolom promo diabaikan.
+
+- Fasilitas    : centang yang tersedia (Wifi, Kolam Renang, AC, dll).
+                 Hanya yang dicentang yang tampil di halaman detail.
+
+----- 2.5 TOMBOL -----
+- Simpan / Perbarui : menyimpan data.
+- Batal             : kembali tanpa menyimpan.
+- Hapus (di daftar/edit) : menghapus item (ada konfirmasi). Permanen.
+
+================================================================
+ 3. ARTIKEL
+================================================================
+Menu "Artikel" -> "+ Tambah" (atau "Edit").
+- Judul*       : judul artikel. (WAJIB)
+- Slug         : kosongkan (otomatis dari judul). Lihat aturan SLUG.
+- Tanggal Terbit : tanggal artikel. Default hari ini. Dipakai untuk
+                 urutan (terbaru di atas) & ditampilkan ke pembaca.
+- Tags         : pisahkan dengan KOMA. Contoh: tips, cuaca, wisata.
+                 Jangan pakai tanda pagar (#) — otomatis ditambahkan.
+- Ringkasan    : 1-2 kalimat. Tampil di kartu artikel & SEO/preview.
+- Konten       : isi pakai EDITOR (WYSIWYG). Tersedia: tebal, miring,
+                 heading, list, kutipan, tautan, dan SISIP GAMBAR
+                 (tombol gambar -> upload otomatis ke Cloudinary).
+- Cover        : gambar utama artikel. Rasio 16:9.
+- Centang "Tampilkan" : agar artikel terbit di situs.
+
+================================================================
+ 4. LEADS IKLAN
+================================================================
+Berisi pengajuan dari form "Pasang Iklan" di situs publik.
+Data ini DIBUAT OLEH PENGUNJUNG — kamu tidak menambah manual.
+Yang bisa kamu lakukan:
+- Ubah STATUS: new -> contacted -> deal / rejected.
+    new       = baru masuk, belum dihubungi
+    contacted = sudah dihubungi
+    deal      = closing / sepakat
+    rejected  = tidak jadi
+- Tombol "Hubungi via WhatsApp" : buka chat ke nomor pemohon.
+Tips: segera ubah status agar tim tahu mana lead yang sudah ditangani.
+
+================================================================
+ 5. ALUR KERJA YANG DISARANKAN
+================================================================
+1) Siapkan foto sesuai PANDUAN-GAMBAR.txt.
+2) Tambah item (Direktori/Artikel) -> isi kolom sesuai panduan ini.
+3) Pastikan "Tampilkan (published)" dicentang.
+4) Untuk villa, cek HARGA (angka polos) & aturan PROMO.
+5) Simpan -> buka situs publik untuk verifikasi tampilan.
+6) Konten baru otomatis masuk sitemap (tidak perlu aksi tambahan).
+
+================================================================
+ 6. KESALAHAN UMUM (HINDARI)
+================================================================
+- Menulis harga "Rp 1.500.000" di kolom harga villa (HARUS: 1500000).
+- Lupa centang "Tampilkan" -> konten tidak muncul di situs.
+- Lupa isi Kode villa -> villa tidak bisa dibuka (Kode dipakai di URL).
+- Centang "Promo" tapi kolom harga promo dikosongkan -> tak ada coretan.
+- Lokasi ditulis beda-beda (mis. "cisarua" vs "Cisarua") -> filter
+  jadi terpisah. Tulis konsisten.
+- Slug pakai spasi/huruf besar -> sebaiknya kosongkan saja (otomatis).
+- Foto portrait untuk cover -> terpotong tidak rapi. Pakai landscape.
+
+================================================================
+ Simpan dokumen ini sebagai acuan tim konten.
+================================================================

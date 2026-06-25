@@ -1,0 +1,61 @@
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+	body {
+		@apply bg-cream font-body text-ink antialiased;
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-heading;
+	}
+	:focus-visible {
+		@apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-cream;
+	}
+}
+
+@layer components {
+	.btn-primary {
+		@apply inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 font-medium text-white shadow-md transition hover:bg-brand-dark;
+	}
+	.btn-action {
+		@apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 font-medium text-white transition hover:bg-accent hover:text-black;
+	}
+	.btn-filter {
+		@apply inline-flex items-center justify-center rounded-md bg-accent-alt px-5 py-2.5 font-medium text-ink transition hover:brightness-95;
+	}
+	.section-title {
+		@apply font-heading text-2xl font-semibold text-brand md:text-3xl;
+	}
+	.card {
+		@apply overflow-hidden rounded-lg bg-surface shadow-md transition hover:shadow-xl md:rounded-2xl;
+	}
+}
+
+/* Swiper overrides: bullet aktif teal */
+.swiper-pagination-bullet-active {
+	background-color: #3e797c !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+	color: #3e797c !important;
+}
+
+/* Panah nav kustom galeri: redup di ujung, sembunyi bila tak bisa digeser */
+.swiper-button-disabled {
+	opacity: 0.35 !important;
+	cursor: default;
+}
+.swiper-button-lock {
+	display: none !important;
+}

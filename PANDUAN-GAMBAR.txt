@@ -1,0 +1,123 @@
+================================================================
+ PANDUAN PENGISIAN GAMBAR — orangpuncak.com
+================================================================
+Tujuan: memastikan semua gambar yang diunggah (villa, wisata,
+kuliner, artikel, iklan) tampil rapi, konsisten, dan cepat di
+semua halaman. Baca sekali, ikuti tiap upload.
+
+----------------------------------------------------------------
+1. ATURAN UMUM (BERLAKU UNTUK SEMUA GAMBAR)
+----------------------------------------------------------------
+- Format file   : JPG/JPEG (foto), PNG (logo/grafis transparan),
+                  WEBP (boleh). Hindari HEIC dari iPhone — konversi
+                  dulu ke JPG.
+- Ruang warna   : sRGB (jangan CMYK).
+- Orientasi     : LANDSCAPE (mendatar) untuk hampir semua slot.
+                  Hindari foto portrait/tegak untuk cover & banner.
+- Resolusi      : unggah versi BESAR & tajam. Sistem otomatis
+                  mengecilkan + mengoptimasi (Cloudinary f_auto,q_auto).
+                  Lebih baik kebesaran daripada pecah/buram.
+- Ukuran file   : idealnya < 3 MB per foto (maks ~8 MB).
+                  Tidak perlu kompres manual — biar Cloudinary yang
+                  optimasi. Cukup pastikan tidak buram.
+- Hindari       : watermark mencolok, teks tertempel di foto,
+                  bingkai/border, tanggal kamera, foto blur/gelap.
+- Subjek        : letakkan objek utama di TENGAH frame. Gambar
+                  dipotong otomatis (crop "fill") di beberapa slot,
+                  jadi jangan taruh detail penting di tepi/pojok.
+
+----------------------------------------------------------------
+2. SPESIFIKASI PER SLOT GAMBAR
+----------------------------------------------------------------
+Catatan: "Rasio" = perbandingan lebar:tinggi. "Min" = ukuran
+minimum yang disarankan agar tidak pecah. Unggah lebih besar = OK.
+
+[A] COVER (cover_image) — Villa / Wisata / Kuliner
+    Dipakai di: kartu daftar, grid unggulan, carousel "Lainnya".
+    - Rasio      : 4:3 (mendatar)
+    - Disarankan : 1600 x 1200 px
+    - Minimum    : 1000 x 750 px
+    - Catatan    : dipotong otomatis ke 4:3. Objek utama di tengah.
+
+[B] BANNER DETAIL — Villa / Wisata / Kuliner (gambar besar paling atas)
+    Sumber gambar = sama dengan COVER (cover_image).
+    - Tampil      : kotak (1:1) di HP, sangat lebar (10:3) di desktop.
+    - Karena itu  : pakai foto landscape yang objek utamanya di
+                    TENGAH supaya aman saat dipotong lebar maupun kotak.
+    - Disarankan  : 1600 x 1200 px atau lebih besar.
+
+[C] GALERI (gallery[]) — Villa / Wisata / Kuliner
+    Dipakai di: strip galeri (thumbnail 4:3) + tampilan LAYAR PENUH
+    (lightbox) saat foto diklik.
+    - Rasio strip : 4:3 (thumbnail dipotong otomatis)
+    - Layar penuh : memakai gambar ASLI (tidak dipotong) — maka
+                    UNGGAH KUALITAS TINGGI.
+    - Disarankan  : 1600 x 1200 px (atau lebih besar), maks ~3 MB.
+    - Jumlah      : 4-10 foto per item agar galeri terlihat penuh.
+    - Urutan      : foto terbaik taruh paling awal.
+
+[D] COVER ARTIKEL (cover_image artikel)
+    Dipakai di: kartu artikel + gambar besar di halaman artikel.
+    - Rasio      : 16:9 (mendatar)
+    - Disarankan : 1600 x 900 px
+    - Minimum    : 1200 x 675 px
+
+[E] GAMBAR DI DALAM KONTEN ARTIKEL (editor WYSIWYG)
+    - Unggah lewat tombol gambar di editor (otomatis ke Cloudinary).
+    - Disarankan : lebar 1200-1600 px, landscape.
+    - Hindari    : gambar super tinggi/panjang yang mengganggu baca.
+
+[F] LOGO / IKON (jika mengganti)
+    - File saat ini: static/orang-puncak-icon.png
+    - Format PNG transparan, persegi (mis. 256 x 256 px).
+
+[G] OPEN GRAPH / SHARE (preview saat link dibagikan)
+    - File: static/og-default.svg (default). Untuk hasil terbaik di
+      Facebook/WhatsApp/LinkedIn, ganti dengan PNG/JPG.
+    - Ukuran WAJIB: 1200 x 630 px (rasio ~1.91:1).
+
+----------------------------------------------------------------
+3. RINGKASAN CEPAT (CHEAT SHEET)
+----------------------------------------------------------------
+  Cover villa/wisata/kuliner ...... 4:3   — 1600 x 1200 px
+  Galeri .......................... 4:3   — 1600 x 1200 px (kualitas tinggi)
+  Cover artikel ................... 16:9  — 1600 x 900 px
+  Gambar dalam artikel ............ bebas — lebar ~1200-1600 px
+  OG / share image ................ 1.91:1 — 1200 x 630 px
+  Logo ............................ 1:1   — 256 x 256 px (PNG)
+
+----------------------------------------------------------------
+4. CARA UPLOAD (PANEL ADMIN)
+----------------------------------------------------------------
+- Buka /admin -> pilih item (Direktori atau Artikel).
+- Klik "Pilih Gambar" (cover) atau "Tambah Gambar" (galeri).
+  Gambar otomatis terunggah ke Cloudinary dan URL tersimpan.
+- Alternatif: tempel URL gambar langsung di kolom yang tersedia.
+- Tunggu sampai pratinjau muncul sebelum menekan Simpan/Perbarui.
+
+----------------------------------------------------------------
+5. KENAPA HARUS RAPI? (PENJELASAN SINGKAT)
+----------------------------------------------------------------
+- Semua kartu & banner memakai potong otomatis (crop "fill") ke
+  rasio tetap. Foto dengan rasio mendekati target tidak akan
+  terpotong aneh.
+- Sistem mengirim versi kecil teroptimasi (thumbnail) di kartu &
+  daftar, dan versi penuh hanya di galeri layar penuh. Jadi:
+  cukup unggah 1 foto berkualitas tinggi, sistem yang mengatur
+  ukuran tampilannya.
+- Konsistensi rasio = tampilan grid yang seragam dan profesional.
+
+----------------------------------------------------------------
+6. CHECKLIST SEBELUM SIMPAN
+----------------------------------------------------------------
+  [ ] Foto landscape, tajam, terang (bukan blur/gelap).
+  [ ] Objek utama di tengah frame.
+  [ ] Rasio sesuai slot (4:3 cover/galeri, 16:9 artikel).
+  [ ] Tidak ada watermark/teks/bingkai mengganggu.
+  [ ] Ukuran file wajar (< 3 MB ideal).
+  [ ] Pratinjau sudah muncul di form admin.
+  [ ] Galeri: minimal 4 foto, foto terbaik di urutan awal.
+
+================================================================
+ Pertanyaan? Simpan file ini sebagai acuan tim konten.
+================================================================

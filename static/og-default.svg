@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+	<rect width="1200" height="630" fill="#3E797C" />
+	<path d="M0 470 L260 300 L440 410 L680 250 L900 400 L1200 230 L1200 630 L0 630 Z" fill="#336366" />
+	<path d="M0 540 L300 410 L520 500 L760 380 L980 470 L1200 360 L1200 630 L0 630 Z" fill="#2c5457" />
+	<circle cx="980" cy="150" r="70" fill="#F1C40F" />
+	<text x="80" y="250" font-family="Poppins, Arial, sans-serif" font-size="92" font-weight="700" fill="#FFFFFF">
+		orang<tspan fill="#F1C40F">puncak</tspan>.com
+	</text>
+	<text x="84" y="320" font-family="Inter, Arial, sans-serif" font-size="38" fill="#FAECD9">
+		Media &amp; Direktori Wisata Kawasan Puncak
+	</text>
+	<text x="84" y="378" font-family="Inter, Arial, sans-serif" font-size="30" fill="#FAECD9" opacity="0.85">
+		Villa · Wisata · Kuliner · Artikel
+	</text>
+</svg>
