@@ -6,8 +6,8 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			// Jalankan sebagai serverless function di Node runtime
-			runtime: 'nodejs20.x'
+			// Node 22 punya WebSocket native (dibutuhkan @supabase/supabase-js)
+			runtime: 'nodejs22.x'
 		})
 	}
 };
