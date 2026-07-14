@@ -60,6 +60,7 @@ export function parsePlaceForm(form: FormData) {
 		name,
 		slug: slugInput ? slugify(slugInput) : slugify(name),
 		kode: str(form.get('kode')),
+		meta_title: str(form.get('meta_title')),
 		category: str(form.get('category')),
 		status: type === 'villa' ? str(form.get('status')) : null,
 		description: str(form.get('description')),
@@ -78,7 +79,10 @@ export function parsePlaceForm(form: FormData) {
 		jam_buka: str(form.get('jam_buka')),
 		harga_tiket: str(form.get('harga_tiket')),
 		harga_range: str(form.get('harga_range')),
-		tips: str(form.get('tips'))
+		tips: str(form.get('tips')),
+		nearby_villa_ids: form.getAll('nearby_villa_ids').map((v) => String(v)).filter(Boolean),
+		nearby_wisata_ids: form.getAll('nearby_wisata_ids').map((v) => String(v)).filter(Boolean),
+		nearby_kuliner_ids: form.getAll('nearby_kuliner_ids').map((v) => String(v)).filter(Boolean)
 	};
 
 	if (type === 'villa') {

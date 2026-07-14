@@ -6,24 +6,27 @@
 	import { SITE_URL } from '$lib/config';
 	import { mapsEmbed } from '$lib/utils/format';
 	import { imgCover } from '$lib/utils/cloudinary';
-	import { itemWaMessage, waLink } from '$lib/utils/whatsapp';
+	import { wisataFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const p = $derived(data.place);
 
-	const jsonLd = $derived({
-		'@context': 'https://schema.org',
-		'@type': 'TouristAttraction',
-		name: p.name,
-		description: p.description,
-		image: p.cover_image,
-		address: p.address,
-		url: `${SITE_URL}/wisata/${p.slug}`
-	});
+	const jsonLd = $derived([
+		{
+			'@context': 'https://schema.org',
+			'@type': 'TouristAttraction',
+			name: p.name,
+			description: p.description,
+			image: p.cover_image,
+			address: p.address,
+			url: `${SITE_URL}/wisata/${p.slug}`
+		},
+		...(wisataFaqJsonLd(p) ? [wisataFaqJsonLd(p)!] : [])
+	]);
 </script>
 
-<Seo title={p.name} description={p.description ?? ''} image={p.cover_image} path={`/wisata/${p.slug}`} {jsonLd} />
+<Seo title={p.meta_title ?? p.name} description={p.description ?? ''} image={p.cover_image} path={`/wisata/${p.slug}`} {jsonLd} />
 
 <!-- Banner -->
 <div class="relative aspect-square w-full overflow-hidden md:aspect-[10/3]">
@@ -67,7 +70,7 @@
 		{/if}
 	</div>
 
-	<div class="mt-6">
+	<!-- <div class="mt-6">
 		<a
 			href={waLink(itemWaMessage('wisata', p.name, p.kode), p.whatsapp ?? undefined)}
 			target="_blank"
@@ -76,7 +79,7 @@
 		>
 			Tanya / Reservasi via WhatsApp
 		</a>
-	</div>
+	</div> -->
 
 	{#if p.description || p.content}
 		<section class="mt-8">
@@ -115,6 +118,33 @@
 			></iframe>
 		</div>
 	</section>
+
+	{#if data.nearbyVilla.length}
+		<section class="mt-12">
+			<h2 class="section-title">Villa Terdekat</h2>
+			<div class="mt-4">
+				<Carousel places={data.nearbyVilla} />
+			</div>
+		</section>
+	{/if}
+
+	{#if data.nearbyWisata.length}
+		<section class="mt-12">
+			<h2 class="section-title">Wisata Terdekat</h2>
+			<div class="mt-4">
+				<Carousel places={data.nearbyWisata} />
+			</div>
+		</section>
+	{/if}
+
+	{#if data.nearbyKuliner.length}
+		<section class="mt-12">
+			<h2 class="section-title">Kuliner Terdekat</h2>
+			<div class="mt-4">
+				<Carousel places={data.nearbyKuliner} />
+			</div>
+		</section>
+	{/if}
 
 	{#if data.related.length}
 		<section class="mt-12">

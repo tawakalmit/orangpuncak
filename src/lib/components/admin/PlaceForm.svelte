@@ -1,21 +1,40 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import ImageUpload from './ImageUpload.svelte';
+	import NearbyPicker from './NearbyPicker.svelte';
+	import RichTextEditor from './RichTextEditor.svelte';
 	import type { Place } from '$lib/types';
+
+	interface PlaceOption {
+		id: string;
+		name: string;
+		type: string;
+	}
 
 	interface Props {
 		place?: Partial<Place>;
 		error?: string | null;
 		submitLabel?: string;
 		formAction?: string;
+		allPlaces?: PlaceOption[];
 	}
-	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '' }: Props = $props();
+	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [] }: Props = $props();
 
 	let type = $state(place.type ?? 'wisata');
 	let status = $state(place.status ?? 'disewakan');
 	let cover = $state(place.cover_image ?? '');
 	let gallery = $state<string[]>(place.gallery ?? []);
 	let saving = $state(false);
+
+	let nearbyVilla = $state<string[]>(place.nearby_villa_ids ?? []);
+	let nearbyWisata = $state<string[]>(place.nearby_wisata_ids ?? []);
+	let nearbyKuliner = $state<string[]>(place.nearby_kuliner_ids ?? []);
+
+	let content = $state(place.content ?? '');
+
+	const villaOptions = $derived(allPlaces.filter((p) => p.type === 'villa'));
+	const wisataOptions = $derived(allPlaces.filter((p) => p.type === 'wisata'));
+	const kulinerOptions = $derived(allPlaces.filter((p) => p.type === 'kuliner'));
 
 	const facilities: { key: string; label: string }[] = [
 		{ key: 'wifi', label: 'Wifi' },
@@ -83,6 +102,10 @@
 				<label for="slug" class="mb-1 block text-sm font-medium">Slug</label>
 				<input id="slug" name="slug" value={place.slug ?? ''} class={inputClass} placeholder="otomatis dari nama" />
 			</div>
+			<div class="md:col-span-2">
+				<label for="meta_title" class="mb-1 block text-sm font-medium">Meta Title <span class="text-ink/50 font-normal">(untuk &lt;title&gt; di browser, kosongkan = pakai Nama)</span></label>
+				<input id="meta_title" name="meta_title" value={place.meta_title ?? ''} class={inputClass} placeholder="mis. Wisata Air Terjun Cibeureum - Puncak" />
+			</div>
 			<div>
 				<label for="category" class="mb-1 block text-sm font-medium">Kategori</label>
 				<input id="category" name="category" value={place.category ?? ''} class={inputClass} />
@@ -117,7 +140,7 @@
 			</div>
 			<div class="md:col-span-2">
 				<label for="content" class="mb-1 block text-sm font-medium">Konten (boleh HTML)</label>
-				<textarea id="content" name="content" rows="4" class={inputClass}>{place.content ?? ''}</textarea>
+				<RichTextEditor name="content" label="Konten" bind:value={content} />
 			</div>
 		</div>
 
@@ -211,6 +234,36 @@
 						</label>
 					{/each}
 				</div>
+			</div>
+		</section>
+	{/if}
+
+	<!-- Nearby -->
+	{#if allPlaces.length > 0}
+		<section class="rounded-xl bg-surface p-5 shadow-md">
+			<h2 class="font-heading font-semibold text-brand">Terdekat / Rekomendasi</h2>
+			<div class="mt-4 grid gap-6 md:grid-cols-3">
+				<NearbyPicker
+					name="nearby_villa_ids"
+					label="Villa Terdekat"
+					options={villaOptions}
+					bind:selected={nearbyVilla}
+					max={8}
+				/>
+				<NearbyPicker
+					name="nearby_wisata_ids"
+					label="Wisata Terdekat"
+					options={wisataOptions}
+					bind:selected={nearbyWisata}
+					max={8}
+				/>
+				<NearbyPicker
+					name="nearby_kuliner_ids"
+					label="Kuliner Terdekat"
+					options={kulinerOptions}
+					bind:selected={nearbyKuliner}
+					max={8}
+				/>
 			</div>
 		</section>
 	{/if}

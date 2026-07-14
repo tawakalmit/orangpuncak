@@ -35,6 +35,7 @@ export interface Place {
 	kode: string;
 	name: string;
 	slug: string;
+	meta_title?: string | null;
 	category_id?: string | null;
 	category?: string | null;
 	type: PlaceType;
@@ -72,6 +73,11 @@ export interface Place {
 
 	facilities?: VillaFacilities | null;
 
+	// nearby
+	nearby_villa_ids?: string[] | null;
+	nearby_wisata_ids?: string[] | null;
+	nearby_kuliner_ids?: string[] | null;
+
 	// wisata / kuliner
 	jam_buka?: string | null;
 	harga_tiket?: string | null;
@@ -79,6 +85,7 @@ export interface Place {
 	tips?: string | null;
 
 	created_at?: string;
+	updated_at?: string;
 }
 
 export interface Article {
@@ -91,6 +98,7 @@ export interface Article {
 	tags?: string[] | null;
 	published_at?: string | null;
 	created_at?: string;
+	updated_at?: string;
 }
 
 export interface AdLead {

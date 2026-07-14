@@ -40,10 +40,10 @@ export const GET: RequestHandler = async () => {
 
 	const entries: UrlEntry[] = [
 		...staticEntries,
-		...villa.map((p) => ({ loc: `/villa/${p.kode}`, lastmod: iso(p.created_at), changefreq: 'weekly', priority: '0.8' })),
-		...wisata.map((p) => ({ loc: `/wisata/${p.slug}`, lastmod: iso(p.created_at), changefreq: 'weekly', priority: '0.7' })),
-		...kuliner.map((p) => ({ loc: `/kuliner/${p.slug}`, lastmod: iso(p.created_at), changefreq: 'weekly', priority: '0.7' })),
-		...articles.map((a) => ({ loc: `/artikel/${a.slug}`, lastmod: iso(a.published_at), changefreq: 'monthly', priority: '0.6' }))
+		...villa.map((p) => ({ loc: `/villa/${p.kode}`, lastmod: iso(p.updated_at ?? p.created_at), changefreq: 'weekly', priority: '0.8' })),
+		...wisata.map((p) => ({ loc: `/wisata/${p.slug}`, lastmod: iso(p.updated_at ?? p.created_at), changefreq: 'weekly', priority: '0.7' })),
+		...kuliner.map((p) => ({ loc: `/kuliner/${p.slug}`, lastmod: iso(p.updated_at ?? p.created_at), changefreq: 'weekly', priority: '0.7' })),
+		...articles.map((a) => ({ loc: `/artikel/${a.slug}`, lastmod: iso(a.updated_at ?? a.published_at), changefreq: 'monthly', priority: '0.6' }))
 	];
 
 	const body = `<?xml version="1.0" encoding="UTF-8"?>

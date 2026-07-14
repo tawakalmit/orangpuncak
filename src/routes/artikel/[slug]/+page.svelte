@@ -4,6 +4,7 @@
 	import { SITE_URL } from '$lib/config';
 	import { formatTanggal } from '$lib/utils/format';
 	import { imgCover, imgThumb } from '$lib/utils/cloudinary';
+	import { artikelFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -13,15 +14,18 @@
 	const shareText = $derived(encodeURIComponent(a.title));
 	const shareUrl = $derived(encodeURIComponent(url));
 
-	const jsonLd = $derived({
-		'@context': 'https://schema.org',
-		'@type': 'Article',
-		headline: a.title,
-		description: a.excerpt,
-		image: a.cover_image,
-		datePublished: a.published_at,
-		url
-	});
+	const jsonLd = $derived([
+		{
+			'@context': 'https://schema.org',
+			'@type': 'Article',
+			headline: a.title,
+			description: a.excerpt,
+			image: a.cover_image,
+			datePublished: a.published_at,
+			url
+		},
+		...(artikelFaqJsonLd(a) ? [artikelFaqJsonLd(a)!] : [])
+	]);
 </script>
 
 <Seo title={a.title} description={a.excerpt ?? ''} image={a.cover_image} path={`/artikel/${a.slug}`} type="article" {jsonLd} />

@@ -8,6 +8,7 @@
 	import { formatRupiah, mapsEmbed, youtubeEmbed } from '$lib/utils/format';
 	import { imgCover } from '$lib/utils/cloudinary';
 	import { villaWaMessage, waLink, type WaAction } from '$lib/utils/whatsapp';
+	import { villaFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -42,15 +43,18 @@
 
 	const embedVideo = $derived(youtubeEmbed(p.video));
 
-	const jsonLd = $derived({
-		'@context': 'https://schema.org',
-		'@type': 'LodgingBusiness',
-		name: p.name,
-		description: p.description,
-		image: p.cover_image,
-		address: p.address,
-		url: `${SITE_URL}/villa/${p.kode}`
-	});
+	const jsonLd = $derived([
+		{
+			'@context': 'https://schema.org',
+			'@type': 'LodgingBusiness',
+			name: p.name,
+			description: p.description,
+			image: p.cover_image,
+			address: p.address,
+			url: `${SITE_URL}/villa/${p.kode}`
+		},
+		...(villaFaqJsonLd(p) ? [villaFaqJsonLd(p)!] : [])
+	]);
 
 	function check(v?: boolean | null) {
 		return v ? '✓' : '✗';
@@ -219,6 +223,27 @@
 	</section>
 
 	<!-- 9. Villa Lainnya -->
+	{#if data.nearbyVilla.length}
+		<section class="mt-12">
+			<h2 class="section-title">Villa Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyVilla} /></div>
+		</section>
+	{/if}
+
+	{#if data.nearbyWisata.length}
+		<section class="mt-12">
+			<h2 class="section-title">Wisata Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyWisata} /></div>
+		</section>
+	{/if}
+
+	{#if data.nearbyKuliner.length}
+		<section class="mt-12">
+			<h2 class="section-title">Kuliner Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyKuliner} /></div>
+		</section>
+	{/if}
+
 	{#if data.related.length}
 		<section class="mt-12">
 			<h2 class="section-title">Villa Lainnya</h2>

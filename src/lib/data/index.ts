@@ -137,6 +137,18 @@ export async function getRelated(type: PlaceType, slug: string, limit = 8): Prom
 	return all.filter((p) => p.slug !== slug).slice(0, limit);
 }
 
+export async function getPlacesByIds(ids: string[]): Promise<Place[]> {
+	if (!ids || ids.length === 0) return [];
+	if (supabase) {
+		const { data, error } = await supabase
+			.from('places')
+			.select('*')
+			.in('id', ids);
+		if (!error && data) return data as Place[];
+	}
+	return seedPlaces.filter((p) => ids.includes(p.id));
+}
+
 export async function getLocations(type: PlaceType): Promise<string[]> {
 	const all = await getPlaces(type);
 	return Array.from(new Set(all.map((p) => p.lokasi).filter(Boolean) as string[])).sort();

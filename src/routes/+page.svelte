@@ -2,7 +2,7 @@
 	import Banner from '$lib/components/Banner.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { SITE_TAGLINE } from '$lib/config';
+	import { SITE_NAME, SITE_TAGLINE, SITE_URL } from '$lib/config';
 	import { formatTanggal } from '$lib/utils/format';
 	import { imgThumb } from '$lib/utils/cloudinary';
 	import { waLink } from '$lib/utils/whatsapp';
@@ -23,12 +23,43 @@
 		{ n: 3, t: 'Reservasi', d: 'Lakukan booking & pembayaran sesuai kesepakatan.' },
 		{ n: 4, t: 'Nikmati Liburan', d: 'Datang dan nikmati pengalaman terbaik di Puncak.' }
 	];
+
+	const jsonLd = [
+		{
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: SITE_NAME,
+			description: SITE_TAGLINE,
+			url: SITE_URL,
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: {
+					'@type': 'EntryPoint',
+					urlTemplate: `${SITE_URL}/wisata?q={search_term_string}`
+				},
+				'query-input': 'required name=search_term_string'
+			}
+		},
+		{
+			'@context': 'https://schema.org',
+			'@type': 'Organization',
+			name: SITE_NAME,
+			url: SITE_URL,
+			logo: `${SITE_URL}/orang-puncak-icon.png`,
+			sameAs: [
+				'https://instagram.com/orangpuncak',
+				'https://tiktok.com/@orangpuncak',
+				'https://youtube.com/@orangpuncak'
+			]
+		}
+	];
 </script>
 
 <Seo
 	title="Media & Direktori Wisata Puncak"
 	description="orangpuncak.com - direktori villa, tempat wisata, kuliner, dan tips perjalanan kawasan Puncak Bogor & Cianjur."
 	image={data.featured[0]?.cover_image}
+	{jsonLd}
 />
 
 {#if bannerSlides.length}

@@ -7,21 +7,25 @@
 	import { mapsEmbed } from '$lib/utils/format';
 	import { imgCover } from '$lib/utils/cloudinary';
 	import { itemWaMessage, waLink } from '$lib/utils/whatsapp';
+	import { kulinerFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const p = $derived(data.place);
 
-	const jsonLd = $derived({
-		'@context': 'https://schema.org',
-		'@type': 'Restaurant',
-		name: p.name,
-		description: p.description,
-		image: p.cover_image,
-		address: p.address,
-		servesCuisine: p.category,
-		url: `${SITE_URL}/kuliner/${p.slug}`
-	});
+	const jsonLd = $derived([
+		{
+			'@context': 'https://schema.org',
+			'@type': 'Restaurant',
+			name: p.name,
+			description: p.description,
+			image: p.cover_image,
+			address: p.address,
+			servesCuisine: p.category,
+			url: `${SITE_URL}/kuliner/${p.slug}`
+		},
+		...(kulinerFaqJsonLd(p) ? [kulinerFaqJsonLd(p)!] : [])
+	]);
 </script>
 
 <Seo title={p.name} description={p.description ?? ''} image={p.cover_image} path={`/kuliner/${p.slug}`} {jsonLd} />
@@ -105,6 +109,27 @@
 			></iframe>
 		</div>
 	</section>
+
+	{#if data.nearbyVilla.length}
+		<section class="mt-12">
+			<h2 class="section-title">Villa Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyVilla} /></div>
+		</section>
+	{/if}
+
+	{#if data.nearbyWisata.length}
+		<section class="mt-12">
+			<h2 class="section-title">Wisata Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyWisata} /></div>
+		</section>
+	{/if}
+
+	{#if data.nearbyKuliner.length}
+		<section class="mt-12">
+			<h2 class="section-title">Kuliner Terdekat</h2>
+			<div class="mt-4"><Carousel places={data.nearbyKuliner} /></div>
+		</section>
+	{/if}
 
 	{#if data.related.length}
 		<section class="mt-12">
