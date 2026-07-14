@@ -111,9 +111,9 @@
 
 <div>
 	<span class="mb-1 block text-sm font-medium">{label}</span>
-	<div class="overflow-hidden rounded-md border border-ink/20 bg-white">
+	<div class="rounded-md border border-ink/20 bg-white">
 		<!-- Toolbar -->
-		<div class="flex flex-wrap items-center gap-1 border-b border-ink/10 bg-cream/40 px-2 py-1.5">
+		<div class="flex flex-wrap items-center gap-1 border-b border-ink/10 bg-cream px-2 py-1.5 sticky top-0 z-10 rounded-t-md">
 			<button type="button" class="{btn} {active.bold ? btnActive : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleBold().run())} title="Bold"><strong>B</strong></button>
 			<button type="button" class="{btn} {active.italic ? btnActive : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleItalic().run())} title="Italic"><em>I</em></button>
 			<span class="mx-1 h-5 w-px bg-ink/15"></span>
