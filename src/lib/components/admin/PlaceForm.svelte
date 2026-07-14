@@ -31,6 +31,7 @@
 	let nearbyKuliner = $state<string[]>(place.nearby_kuliner_ids ?? []);
 
 	let content = $state(place.content ?? '');
+	let tips = $state(place.tips ?? '');
 
 	const villaOptions = $derived(allPlaces.filter((p) => p.type === 'villa'));
 	const wisataOptions = $derived(allPlaces.filter((p) => p.type === 'wisata'));
@@ -175,8 +176,7 @@
 						<input id="harga_tiket" name="harga_tiket" value={place.harga_tiket ?? ''} class={inputClass} />
 					</div>
 					<div class="md:col-span-2">
-						<label for="tips" class="mb-1 block text-sm font-medium">Tips</label>
-						<textarea id="tips" name="tips" rows="2" class={inputClass}>{place.tips ?? ''}</textarea>
+						<RichTextEditor name="tips" label="Tips" bind:value={tips} />
 					</div>
 				{:else}
 					<div>

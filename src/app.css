@@ -59,3 +59,8 @@
 .swiper-button-lock {
 	display: none !important;
 }
+
+/* Konten body (rich text dari editor) */
+.konten-body h2 {
+	color: rgb(62 121 124 / var(--tw-text-opacity, 1));
+}

@@ -84,7 +84,7 @@
 	{#if p.description || p.content}
 		<section class="mt-8">
 			<h2 class="section-title">Tentang {p.name}</h2>
-			<div class="prose mt-3 max-w-none text-ink/80">
+			<div class="prose mt-3 max-w-none text-ink/80 konten-body">
 				{#if p.content}{@html p.content}{:else}<p>{p.description}</p>{/if}
 			</div>
 		</section>

@@ -84,7 +84,7 @@
 	{#if p.description || p.content}
 		<section class="mt-8">
 			<h2 class="section-title">Tentang {p.name}</h2>
-			<div class="prose mt-3 max-w-none text-ink/80">
+			<div class="prose mt-3 max-w-none text-ink/80 konten-body">
 				{#if p.content}{@html p.content}{:else}<p>{p.description}</p>{/if}
 			</div>
 		</section>
@@ -93,7 +93,7 @@
 	{#if p.tips}
 		<section class="mt-8 rounded-xl bg-muted p-5">
 			<h2 class="font-heading text-lg font-semibold text-brand">Tips Berkunjung</h2>
-			<p class="mt-2 text-ink/80">{p.tips}</p>
+			<div class="prose mt-2 max-w-none text-ink/80">{@html p.tips}</div>
 		</section>
 	{/if}
 
