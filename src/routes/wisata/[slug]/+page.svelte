@@ -63,7 +63,11 @@
 			</div>
 		{/if}
 		{#if p.address}
-			<a href="#lokasi" class="rounded-xl bg-surface p-4 shadow-md hover:shadow-lg transition block">
+			<a
+				href="#lokasi"
+				onclick={(e) => { e.preventDefault(); document.getElementById('lokasi')?.scrollIntoView({ behavior: 'smooth' }); }}
+				class="rounded-xl bg-surface p-4 shadow-md hover:shadow-lg transition block"
+			>
 				<div class="text-xs text-ink/60">Lokasi</div>
 				<div class="font-semibold text-brand">{p.address}</div>
 			</a>

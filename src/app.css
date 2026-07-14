@@ -8,7 +8,7 @@
 
 @layer base {
 	html {
-		scroll-behavior: smooth;
+		scroll-behavior: auto;
 	}
 	body {
 		@apply bg-cream font-body text-ink antialiased;
