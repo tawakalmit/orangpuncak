@@ -161,7 +161,7 @@
 		<dl class="mt-4 grid gap-x-6 gap-y-3 rounded-xl bg-surface p-5 shadow-md sm:grid-cols-2">
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kode</dt><dd class="font-medium">{p.kode}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Status</dt><dd class="font-medium capitalize">{p.status}</dd></div>
-			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Lokasi</dt><dd class="font-medium">{p.lokasi}</dd></div>
+			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Lokasi</dt><dd class="font-medium"><a href="#lokasi" class="hover:underline hover:text-brand">{p.lokasi}</a></dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kamar Tidur</dt><dd class="font-medium">{p.jumlah_kamar_tidur}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kamar Mandi</dt><dd class="font-medium">{p.jumlah_kamar_mandi}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Jumlah Lantai</dt><dd class="font-medium">{p.jumlah_lantai}</dd></div>
@@ -209,7 +209,7 @@
 	{/if}
 
 	<!-- 8. Lokasi -->
-	<section class="mt-8">
+	<section id="lokasi" class="mt-8">
 		<h2 class="section-title">Lokasi</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
 			<iframe

@@ -63,10 +63,10 @@
 			</div>
 		{/if}
 		{#if p.address}
-			<div class="rounded-xl bg-surface p-4 shadow-md">
+			<a href="#lokasi" class="rounded-xl bg-surface p-4 shadow-md hover:shadow-lg transition block">
 				<div class="text-xs text-ink/60">Lokasi</div>
 				<div class="font-semibold text-brand">{p.address}</div>
-			</div>
+			</a>
 		{/if}
 	</div>
 
@@ -97,7 +97,7 @@
 		</section>
 	{/if}
 
-	<section class="mt-8">
+	<section id="lokasi" class="mt-8">
 		<h2 class="section-title">Lokasi</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
 			<iframe
