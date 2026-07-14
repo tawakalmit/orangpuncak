@@ -4,6 +4,10 @@ export const CLOUDINARY_CLOUD_NAME = env.PUBLIC_CLOUDINARY_CLOUD_NAME ?? '';
 export const CLOUDINARY_UPLOAD_PRESET = env.PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? '';
 export const cloudinaryConfigured = !!CLOUDINARY_CLOUD_NAME && !!CLOUDINARY_UPLOAD_PRESET;
 
+/** Placeholder SVG data-URI untuk item tanpa cover image. */
+export const PLACEHOLDER_IMAGE =
+	"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='450' viewBox='0 0 600 450'%3E%3Crect width='600' height='450' fill='%23e8f0f0'/%3E%3Crect x='240' y='160' width='120' height='90' rx='8' fill='%23b0cece'/%3E%3Ccircle cx='270' cy='185' r='14' fill='%23e8f0f0'/%3E%3Cpolygon points='240,250 300,190 360,250' fill='%23b0cece'/%3E%3Cpolygon points='280,250 330,210 380,250' fill='%2390b8b8'/%3E%3Ctext x='300' y='310' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%2390b8b8'%3EBelum ada foto%3C%2Ftext%3E%3C%2Fsvg%3E";
+
 export interface CloudinaryResult {
 	secure_url: string;
 	public_id: string;
@@ -29,16 +33,19 @@ export function cldTransform(url: string | null | undefined, transform: string):
 
 /** Thumbnail untuk kartu/grid/daftar (rasio 4:3). */
 export function imgThumb(url: string | null | undefined): string {
+	if (!url) return PLACEHOLDER_IMAGE;
 	return cldTransform(url, 'c_fill,g_auto,w_600,h_450,f_auto,q_auto');
 }
 
 /** Thumbnail kecil (strip galeri). */
 export function imgThumbSm(url: string | null | undefined): string {
+	if (!url) return PLACEHOLDER_IMAGE;
 	return cldTransform(url, 'c_fill,g_auto,w_500,h_375,f_auto,q_auto');
 }
 
 /** Gambar besar teroptimasi (banner/cover) tanpa crop paksa. */
 export function imgCover(url: string | null | undefined): string {
+	if (!url) return PLACEHOLDER_IMAGE;
 	return cldTransform(url, 'w_1600,f_auto,q_auto');
 }
 

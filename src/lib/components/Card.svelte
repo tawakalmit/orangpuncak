@@ -15,6 +15,26 @@
 	const statusLabel = $derived(
 		place.status === 'dijual' ? 'Dijual' : place.status === 'disewakan' ? 'Disewakan' : null
 	);
+
+	function stripHtml(html: string | null | undefined): string {
+		if (!html) return '';
+		return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+	}
+
+	function previewHarga(html: string | null | undefined): string {
+		if (!html) return 'Lihat Harga';
+		const segments = html
+			.replace(/<\/(p|li|td|th|div|h[1-6])>/gi, '\n')
+			.replace(/<[^>]*>/g, '')
+			.split('\n')
+			.map((s) => s.replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim())
+			.filter(Boolean);
+
+		// hanya cari segmen yang jelas mengandung info harga
+		const hargaPattern = /rp[\s.]?\d|gratis|free/i;
+		const found = segments.find((s) => hargaPattern.test(s) && s.length <= 60);
+		return found ?? 'Lihat Harga';
+	}
 </script>
 
 <a {href} class="card group flex flex-col" aria-label={place.name}>
@@ -43,7 +63,7 @@
 
 	<div class="flex flex-1 flex-col p-3 md:p-4">
 		{#if place.lokasi}
-			<span class="text-xs text-brand/80">{place.lokasi}{place.kode ? ` · ${place.kode}` : ''}</span>
+			<span class="text-xs text-brand/80">{place.lokasi}{place.type === 'villa' && place.kode ? ` · ${place.kode}` : ''}</span>
 		{/if}
 		<h3 class="mt-1 line-clamp-2 font-bold leading-snug">{place.name}</h3>
 
@@ -81,7 +101,7 @@
 			</div>
 		{:else if place.type === 'wisata'}
 			<div class="mt-auto pt-3 text-sm text-ink/70">
-				{#if place.harga_tiket}<div>HTM: <span class="font-semibold text-brand">{place.harga_tiket}</span></div>{/if}
+				{#if place.harga_tiket}<div class="line-clamp-1">HTM: <span class="font-semibold text-brand">{previewHarga(place.harga_tiket)}</span></div>{/if}
 				{#if place.jam_buka}<div class="text-xs">{place.jam_buka}</div>{/if}
 			</div>
 		{:else}

@@ -49,17 +49,11 @@
 
 <div class="mx-auto max-w-content px-4 py-8 2xl:px-0 lg:w-11/12">
 	<!-- Info -->
-	<div class="grid gap-4 sm:grid-cols-3">
+	<div class="grid gap-4 sm:grid-cols-2">
 		{#if p.jam_buka}
 			<div class="rounded-xl bg-surface p-4 shadow-md">
 				<div class="text-xs text-ink/60">Jam Buka</div>
 				<div class="font-semibold text-brand">{p.jam_buka}</div>
-			</div>
-		{/if}
-		{#if p.harga_tiket}
-			<div class="rounded-xl bg-surface p-4 shadow-md">
-				<div class="text-xs text-ink/60">Harga Tiket (HTM)</div>
-				<div class="font-semibold text-brand">{p.harga_tiket}</div>
 			</div>
 		{/if}
 		{#if p.address}
@@ -73,6 +67,13 @@
 			</a>
 		{/if}
 	</div>
+
+	{#if p.harga_tiket}
+		<section class="mt-4 rounded-xl bg-surface p-4 shadow-md">
+			<div class="text-xs text-ink/60">Harga Tiket (HTM)</div>
+			<div class="prose prose-sm mt-1 max-w-none text-brand">{@html p.harga_tiket}</div>
+		</section>
+	{/if}
 
 	<!-- <div class="mt-6">
 		<a

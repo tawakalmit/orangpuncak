@@ -32,6 +32,7 @@
 
 	let content = $state(place.content ?? '');
 	let tips = $state(place.tips ?? '');
+	let hargaTiket = $state(place.harga_tiket ?? '');
 
 	const villaOptions = $derived(allPlaces.filter((p) => p.type === 'villa'));
 	const wisataOptions = $derived(allPlaces.filter((p) => p.type === 'wisata'));
@@ -171,9 +172,8 @@
 					<input id="jam_buka" name="jam_buka" value={place.jam_buka ?? ''} class={inputClass} />
 				</div>
 				{#if type === 'wisata'}
-					<div>
-						<label for="harga_tiket" class="mb-1 block text-sm font-medium">Harga Tiket (HTM)</label>
-						<input id="harga_tiket" name="harga_tiket" value={place.harga_tiket ?? ''} class={inputClass} />
+					<div class="md:col-span-2">
+						<RichTextEditor name="harga_tiket" label="Harga Tiket (HTM)" bind:value={hargaTiket} />
 					</div>
 					<div class="md:col-span-2">
 						<RichTextEditor name="tips" label="Tips" bind:value={tips} />
