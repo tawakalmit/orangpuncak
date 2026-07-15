@@ -160,7 +160,11 @@
 		<div class="mt-4 flex flex-wrap gap-5">
 			<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="is_promo" checked={place.is_promo} class="h-4 w-4 accent-brand" /> Promo</label>
 			<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="is_featured" checked={place.is_featured} class="h-4 w-4 accent-brand" /> Unggulan</label>
-			<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="published" checked={place.id ? (place as Place & {published?: boolean}).published ?? true : true} class="h-4 w-4 accent-brand" /> Tampilkan (published)</label>
+			<label class="flex items-center gap-2 text-sm">
+				<!-- Hidden input memastikan field selalu terkirim, override oleh checkbox kalau dicentang -->
+				<input type="hidden" name="published" value="off" />
+				<input type="checkbox" name="published" checked={place.id ? (place as Place & {published?: boolean}).published ?? true : true} class="h-4 w-4 accent-brand" /> Tampilkan (published)
+			</label>
 		</div>
 	</section>
 

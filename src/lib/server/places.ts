@@ -75,7 +75,7 @@ export function parsePlaceForm(form: FormData) {
 		whatsapp: str(form.get('whatsapp')),
 		is_promo: form.get('is_promo') === 'on',
 		is_featured: form.get('is_featured') === 'on',
-		published: form.get('published') !== null ? form.get('published') === 'on' : true,
+		published: form.getAll('published').includes('on'),
 		jam_buka: str(form.get('jam_buka')),
 		harga_tiket: str(form.get('harga_tiket')),
 		harga_range: str(form.get('harga_range')),
