@@ -147,6 +147,14 @@
 				<label for="video" class="mb-1 block text-sm font-medium">Video YouTube (opsional)</label>
 				<input id="video" name="video" value={place.video ?? ''} class={inputClass} />
 			</div>
+			<div>
+				<label for="gmaps_url" class="mb-1 block text-sm font-medium">Link Google Maps <span class="font-normal text-ink/50">(untuk tombol buka maps)</span></label>
+				<input id="gmaps_url" name="gmaps_url" value={place.gmaps_url ?? ''} class={inputClass} placeholder="https://maps.app.goo.gl/..." />
+			</div>
+			<div class="md:col-span-2">
+				<label for="gmaps_embed" class="mb-1 block text-sm font-medium">Embed Google Maps <span class="font-normal text-ink/50">(paste tag &lt;iframe&gt; atau URL embed dari Google Maps)</span></label>
+				<textarea id="gmaps_embed" name="gmaps_embed" rows="3" class={inputClass} placeholder={'<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>'}>{place.gmaps_embed ?? ''}</textarea>
+			</div>
 			<div class="md:col-span-2">
 				<label for="description" class="mb-1 block text-sm font-medium">Deskripsi singkat</label>
 				<textarea id="description" name="description" rows="2" class={inputClass}>{place.description ?? ''}</textarea>

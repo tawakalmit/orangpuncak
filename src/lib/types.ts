@@ -74,6 +74,9 @@ export interface Place {
 
 	facilities?: VillaFacilities | null;
 
+	gmaps_url?: string | null;
+	gmaps_embed?: string | null;
+
 	// nearby
 	nearby_villa_ids?: string[] | null;
 	nearby_wisata_ids?: string[] | null;

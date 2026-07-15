@@ -33,6 +33,16 @@ function str(v: FormDataEntryValue | null): string | null {
 	return s === '' ? null : s;
 }
 
+/** Ekstrak src dari tag <iframe> Google Maps. Kalau sudah berupa URL langsung, kembalikan as-is. */
+function extractEmbedSrc(val: string | null): string | null {
+	if (!val) return null;
+	// Kalau sudah berupa URL (bukan tag iframe)
+	if (val.startsWith('http')) return val;
+	// Ekstrak src="..." dari tag iframe
+	const match = val.match(/src=["']([^"']+)["']/i);
+	return match ? match[1] : val;
+}
+
 export function slugify(input: string): string {
 	return input
 		.toLowerCase()
@@ -73,6 +83,8 @@ export function parsePlaceForm(form: FormData) {
 		gallery,
 		video: str(form.get('video')),
 		whatsapp: str(form.get('whatsapp')),
+		gmaps_url: str(form.get('gmaps_url')),
+		gmaps_embed: extractEmbedSrc(str(form.get('gmaps_embed'))),
 		is_promo: form.get('is_promo') === 'on',
 		is_featured: form.get('is_featured') === 'on',
 		published: form.getAll('published').includes('on'),

@@ -114,7 +114,7 @@
 	<section id="lokasi" class="mt-8">
 		<h2 class="section-title">Lokasi</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
-			<LazyMap lat={p.lat} lng={p.lng} query={p.address} title={`Peta lokasi ${p.name}`} />
+			<LazyMap embedSrc={p.gmaps_embed} mapsUrl={p.gmaps_url} title={`Peta lokasi ${p.name}`} />
 		</div>
 	</section>
 
