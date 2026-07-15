@@ -33,7 +33,6 @@
 						WhatsApp: chat sekarang
 					</a>
 				</li>
-				<li>Email: halo@orangpuncak.com</li>
 				<li>Kawasan Puncak, Bogor &amp; Cianjur</li>
 			</ul>
 			<div class="mt-4 flex gap-3 text-sm">

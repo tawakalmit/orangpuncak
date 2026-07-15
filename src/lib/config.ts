@@ -18,7 +18,7 @@ export const NAV_LINKS = [
 ];
 
 export const SOCIAL_LINKS = [
-	{ label: 'Instagram', href: 'https://instagram.com/orangpuncak' },
-	{ label: 'TikTok', href: 'https://tiktok.com/@orangpuncak' },
-	{ label: 'YouTube', href: 'https://youtube.com/@orangpuncak' }
+	{ label: 'Instagram', href: 'https://www.instagram.com/orangpuncakdotcom' },
+	// { label: 'TikTok', href: 'https://tiktok.com/@orangpuncak' },
+	// { label: 'YouTube', href: 'https://youtube.com/@orangpuncak' }
 ];
