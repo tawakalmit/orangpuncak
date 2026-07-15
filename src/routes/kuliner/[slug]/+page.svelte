@@ -53,7 +53,7 @@
 		{#if p.jam_buka}
 			<div class="rounded-xl bg-surface p-4 shadow-md">
 				<div class="text-xs text-ink/60">Jam Buka</div>
-				<div class="prose prose-sm mt-1 max-w-none font-semibold text-brand">{@html p.jam_buka}</div>
+				<div class="prose prose-sm mt-1 max-w-none font-semibold text-brand [&_p]:my-0">{@html p.jam_buka}</div>
 			</div>
 		{/if}
 		{#if p.harga_range}
@@ -69,7 +69,7 @@
 				class="rounded-xl bg-surface p-4 shadow-md hover:shadow-lg transition block"
 			>
 				<div class="text-xs text-ink/60">Lokasi</div>
-				<div class="font-semibold text-brand">{p.address}</div>
+				<div class="text-sm font-semibold text-brand">{p.address}</div>
 			</a>
 		{/if}
 	</div>
