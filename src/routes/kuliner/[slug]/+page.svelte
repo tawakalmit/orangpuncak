@@ -62,14 +62,18 @@
 				<div class="font-semibold text-brand">{p.harga_range}</div>
 			</div>
 		{/if}
-		{#if p.address}
+		{#if p.gmaps_url}
 			<a
-				href="#lokasi"
-				onclick={(e) => { e.preventDefault(); document.getElementById('lokasi')?.scrollIntoView({ behavior: 'smooth' }); }}
-				class="rounded-xl bg-surface p-4 shadow-md hover:shadow-lg transition block"
+				href={p.gmaps_url}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="flex items-center justify-center rounded-xl bg-brand px-4 py-4 font-semibold text-white shadow-md hover:bg-brand/90 transition"
 			>
-				<div class="text-xs text-ink/60">Lokasi</div>
-				<div class="text-sm font-semibold text-brand">{p.address}</div>
+				<svg class="mr-2 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+				</svg>
+				Buka GMaps
 			</a>
 		{/if}
 	</div>

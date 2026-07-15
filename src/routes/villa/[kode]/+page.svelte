@@ -90,6 +90,20 @@
 					{action}
 				</a>
 			{/each}
+			{#if p.gmaps_url}
+				<a
+					href={p.gmaps_url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="flex items-center gap-1.5 rounded-full bg-white/90 px-5 py-3 text-sm font-semibold text-brand shadow hover:bg-white transition"
+				>
+					<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+					</svg>
+					Buka GMaps
+				</a>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -162,7 +176,7 @@
 		<dl class="mt-4 grid gap-x-6 gap-y-3 rounded-xl bg-surface p-5 shadow-md sm:grid-cols-2">
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kode</dt><dd class="font-medium">{p.kode}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Status</dt><dd class="font-medium capitalize">{p.status}</dd></div>
-			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Lokasi</dt><dd class="font-medium"><a href="#lokasi" onclick={(e) => { e.preventDefault(); document.getElementById('lokasi')?.scrollIntoView({ behavior: 'smooth' }); }} class="hover:underline hover:text-brand">{p.lokasi}</a></dd></div>
+			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Lokasi</dt><dd class="font-medium">{p.lokasi}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kamar Tidur</dt><dd class="font-medium">{p.jumlah_kamar_tidur}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Kamar Mandi</dt><dd class="font-medium">{p.jumlah_kamar_mandi}</dd></div>
 			<div class="flex justify-between border-b border-ink/10 py-1"><dt class="text-ink/60">Jumlah Lantai</dt><dd class="font-medium">{p.jumlah_lantai}</dd></div>
