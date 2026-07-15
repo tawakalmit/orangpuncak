@@ -97,7 +97,7 @@
 				</select>
 			</div>
 			<div>
-				<label for="kode" class="mb-1 block text-sm font-medium">Kode {type === 'villa' ? '*' : ''}</label>
+				<label for="kode" class="mb-1 block text-sm font-medium">Kode <span class="font-normal text-ink/50">(kosongkan untuk auto-generate)</span></label>
 				<input id="kode" name="kode" value={place.kode ?? ''} class={inputClass} placeholder="mis. VP-001" />
 			</div>
 			<div>
