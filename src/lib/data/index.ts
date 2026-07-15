@@ -8,6 +8,23 @@ import type {
 } from '$lib/types';
 import { articles as seedArticles, places as seedPlaces } from './seed';
 
+/**
+ * Field minimum untuk menampilkan Card — hindari kolom berat seperti
+ * content, harga_tiket, tips, jam_buka (HTML panjang), gallery, dsb.
+ */
+const CARD_SELECT = [
+	'id', 'type', 'name', 'slug', 'kode',
+	'cover_image', 'lokasi', 'is_promo', 'is_featured',
+	'status', 'categories',
+	// villa pricing (dipakai Card)
+	'harga_sewa_weekday', 'harga_sewa_weekend',
+	'promo_harga_sewa_weekday', 'promo_harga_sewa_weekend',
+	'harga_jual', 'harga_promo',
+	// wisata / kuliner info ringkas
+	'harga_tiket', 'jam_buka', 'harga_range',
+	'created_at'
+].join(', ');
+
 /** Terapkan filter villa pada array Place (dipakai untuk seed & sebagai pengaman). */
 function applyVillaFilter(list: Place[], filter: VillaFilter): Place[] {
 	return list.filter((p) => {
@@ -33,7 +50,7 @@ export async function getFeaturedPlaces(type?: PlaceType, limit = 8): Promise<Pl
 	if (supabase) {
 		let query = supabase
 			.from('places')
-			.select('*')
+			.select(CARD_SELECT)
 			.eq('is_featured', true)
 			.order('created_at', { ascending: false })
 			.limit(limit);
@@ -52,7 +69,7 @@ export async function getLatestPlaces(type: PlaceType, limit = 8): Promise<Place
 	if (supabase) {
 		const { data, error } = await supabase
 			.from('places')
-			.select('*')
+			.select(CARD_SELECT)
 			.eq('type', type)
 			.order('created_at', { ascending: false })
 			.limit(limit);
@@ -69,7 +86,7 @@ export async function getPlaces(
 	opts: { q?: string; category?: string; lokasi?: string } = {}
 ): Promise<Place[]> {
 	if (supabase) {
-		let query = supabase.from('places').select('*').eq('type', type);
+		let query = supabase.from('places').select(CARD_SELECT).eq('type', type);
 		if (opts.category) query = query.eq('category', opts.category);
 		if (opts.lokasi) query = query.eq('lokasi', opts.lokasi);
 		if (opts.q) query = query.ilike('name', `%${opts.q}%`);
@@ -90,7 +107,7 @@ export async function getVillas(filter: VillaFilter = {}): Promise<Place[]> {
 	if (supabase) {
 		const { data, error } = await supabase
 			.from('places')
-			.select('*')
+			.select(CARD_SELECT)
 			.eq('type', 'villa')
 			.order('created_at', { ascending: false });
 		if (!error && data) return applyVillaFilter(data as Place[], filter);
@@ -142,7 +159,7 @@ export async function getPlacesByIds(ids: string[]): Promise<Place[]> {
 	if (supabase) {
 		const { data, error } = await supabase
 			.from('places')
-			.select('*')
+			.select(CARD_SELECT)
 			.in('id', ids);
 		if (!error && data) return data as Place[];
 	}
@@ -163,7 +180,7 @@ export async function getArticles(limit?: number): Promise<Article[]> {
 	if (supabase) {
 		let query = supabase
 			.from('articles')
-			.select('*')
+			.select('id, title, slug, excerpt, cover_image, tags, published_at, created_at')
 			.order('published_at', { ascending: false });
 		if (limit) query = query.limit(limit);
 		const { data, error } = await query;

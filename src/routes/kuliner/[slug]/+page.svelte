@@ -2,9 +2,9 @@
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Gallery from '$lib/components/Gallery.svelte';
+	import LazyMap from '$lib/components/LazyMap.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_URL } from '$lib/config';
-	import { mapsEmbed } from '$lib/utils/format';
 	import { imgCover } from '$lib/utils/cloudinary';
 	import { itemWaMessage, waLink } from '$lib/utils/whatsapp';
 	import { kulinerFaqJsonLd } from '$lib/utils/faqJsonLd';
@@ -104,13 +104,7 @@
 	<section id="lokasi" class="mt-8">
 		<h2 class="section-title">Lokasi (klik untuk lihat)</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
-			<iframe
-				title={`Peta lokasi ${p.name}`}
-				src={mapsEmbed({ lat: p.lat, lng: p.lng, query: p.address })}
-				class="h-72 w-full border-0 md:h-96"
-				loading="lazy"
-				referrerpolicy="no-referrer-when-downgrade"
-			></iframe>
+			<LazyMap lat={p.lat} lng={p.lng} query={p.address} title={`Peta lokasi ${p.name}`} />
 		</div>
 	</section>
 
