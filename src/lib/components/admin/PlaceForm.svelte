@@ -125,6 +125,7 @@
 					<option value="Megamendung">Megamendung</option>
 					<option value="Pacet">Pacet</option>
 					<option value="Sukaresmi">Sukaresmi</option>
+					<option value="Sukaresmi">Puncak Dua</option>
 				</select>
 			</div>			<div class="md:col-span-2">
 				<label for="address" class="mb-1 block text-sm font-medium">Alamat</label>
