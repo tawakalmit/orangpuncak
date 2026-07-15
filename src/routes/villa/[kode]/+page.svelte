@@ -210,7 +210,7 @@
 
 	<!-- 8. Lokasi -->
 	<section id="lokasi" class="mt-8">
-		<h2 class="section-title">Lokasi</h2>
+		<h2 class="section-title">Lokasi (klik untuk lihat)</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
 			<iframe
 				title={`Peta lokasi villa ${p.name}`}

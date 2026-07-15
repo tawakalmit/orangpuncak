@@ -11,13 +11,14 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.maybeSingle();
 	if (err || !data) throw error(404, 'Data tidak ditemukan');
 
-	const { data: allPlaces } = await locals.supabase
-		.from('places')
-		.select('id, name, type')
-		.neq('id', params.id)
-		.order('name', { ascending: true });
+	const [{ data: allPlacesData }, { data: cats }] = await Promise.all([
+		locals.supabase.from('places').select('id, name, type').neq('id', params.id).order('name', { ascending: true }),
+		locals.supabase.from('places').select('categories').not('categories', 'is', null)
+	]);
 
-	return { place: data, allPlaces: allPlaces ?? [] };
+	const allCategories = [...new Set((cats ?? []).flatMap((r) => r.categories ?? []).filter(Boolean))].sort() as string[];
+
+	return { place: data, allPlaces: allPlacesData ?? [], allCategories };
 };
 
 export const actions: Actions = {

@@ -38,6 +38,7 @@ export interface Place {
 	meta_title?: string | null;
 	category_id?: string | null;
 	category?: string | null;
+	categories?: string[] | null;
 	type: PlaceType;
 	status?: VillaStatus | null;
 	description?: string | null;

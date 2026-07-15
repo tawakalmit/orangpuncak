@@ -102,12 +102,12 @@
 		{:else if place.type === 'wisata'}
 			<div class="mt-auto pt-3 text-sm text-ink/70">
 				{#if place.harga_tiket}<div class="line-clamp-1">HTM: <span class="font-semibold text-brand">{previewHarga(place.harga_tiket)}</span></div>{/if}
-				{#if place.jam_buka}<div class="text-xs">{place.jam_buka}</div>{/if}
+				{#if place.jam_buka}<div class="line-clamp-1 text-xs">{stripHtml(place.jam_buka)}</div>{/if}
 			</div>
 		{:else}
 			<div class="mt-auto pt-3 text-sm text-ink/70">
 				{#if place.harga_range}<div class="font-semibold text-brand">{place.harga_range}</div>{/if}
-				{#if place.jam_buka}<div class="text-xs">{place.jam_buka}</div>{/if}
+				{#if place.jam_buka}<div class="line-clamp-1 text-xs">{stripHtml(place.jam_buka)}</div>{/if}
 			</div>
 		{/if}
 	</div>

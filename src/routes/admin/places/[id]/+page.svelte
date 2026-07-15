@@ -22,4 +22,4 @@
 </div>
 <h1 class="mt-2 font-heading text-2xl font-bold text-brand">Edit: {data.place.name}</h1>
 
-<PlaceForm place={data.place} allPlaces={data.allPlaces} error={form?.error} submitLabel="Perbarui" formAction="?/update" />
+<PlaceForm place={data.place} allPlaces={data.allPlaces} allCategories={data.allCategories} error={form?.error} submitLabel="Perbarui" formAction="?/update" />

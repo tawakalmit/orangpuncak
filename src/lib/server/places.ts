@@ -61,7 +61,7 @@ export function parsePlaceForm(form: FormData) {
 		slug: slugInput ? slugify(slugInput) : slugify(name),
 		kode: str(form.get('kode')),
 		meta_title: str(form.get('meta_title')),
-		category: str(form.get('category')),
+		categories: form.getAll('categories').map((v) => String(v)).filter(Boolean),
 		status: type === 'villa' ? str(form.get('status')) : null,
 		description: str(form.get('description')),
 		content: str(form.get('content')),

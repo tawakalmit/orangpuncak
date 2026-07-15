@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import CategoryPicker from './CategoryPicker.svelte';
 	import ImageUpload from './ImageUpload.svelte';
 	import NearbyPicker from './NearbyPicker.svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
@@ -17,14 +18,16 @@
 		submitLabel?: string;
 		formAction?: string;
 		allPlaces?: PlaceOption[];
+		allCategories?: string[];
 	}
-	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [] }: Props = $props();
+	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [], allCategories = [] }: Props = $props();
 
 	let type = $state(place.type ?? 'wisata');
 	let status = $state(place.status ?? 'disewakan');
 	let cover = $state(place.cover_image ?? '');
 	let gallery = $state<string[]>(place.gallery ?? []);
 	let saving = $state(false);
+	let categories = $state<string[]>(place.categories ?? []);
 
 	let nearbyVilla = $state<string[]>(place.nearby_villa_ids ?? []);
 	let nearbyWisata = $state<string[]>(place.nearby_wisata_ids ?? []);
@@ -33,6 +36,7 @@
 	let content = $state(place.content ?? '');
 	let tips = $state(place.tips ?? '');
 	let hargaTiket = $state(place.harga_tiket ?? '');
+	let jamBuka = $state(place.jam_buka ?? '');
 
 	const villaOptions = $derived(allPlaces.filter((p) => p.type === 'villa'));
 	const wisataOptions = $derived(allPlaces.filter((p) => p.type === 'wisata'));
@@ -109,14 +113,20 @@
 				<input id="meta_title" name="meta_title" value={place.meta_title ?? ''} class={inputClass} placeholder="mis. Wisata Air Terjun Cibeureum - Puncak" />
 			</div>
 			<div>
-				<label for="category" class="mb-1 block text-sm font-medium">Kategori</label>
-				<input id="category" name="category" value={place.category ?? ''} class={inputClass} />
+				<CategoryPicker name="categories" label="Kategori" options={allCategories} bind:selected={categories} />
 			</div>
 			<div>
 				<label for="lokasi" class="mb-1 block text-sm font-medium">Lokasi</label>
-				<input id="lokasi" name="lokasi" value={place.lokasi ?? ''} class={inputClass} placeholder="mis. Cisarua" />
-			</div>
-			<div class="md:col-span-2">
+				<select id="lokasi" name="lokasi" class={inputClass} value={place.lokasi ?? ''}>
+					<option value="">-- Pilih Lokasi --</option>
+					<option value="Cisarua">Cisarua</option>
+					<option value="Puncak Pass">Puncak Pass</option>
+					<option value="Cipanas">Cipanas</option>
+					<option value="Megamendung">Megamendung</option>
+					<option value="Pacet">Pacet</option>
+					<option value="Sukaresmi">Sukaresmi</option>
+				</select>
+			</div>			<div class="md:col-span-2">
 				<label for="address" class="mb-1 block text-sm font-medium">Alamat</label>
 				<input id="address" name="address" value={place.address ?? ''} class={inputClass} />
 			</div>
@@ -167,9 +177,8 @@
 		<section class="rounded-xl bg-surface p-5 shadow-md">
 			<h2 class="font-heading font-semibold text-brand">Detail {type === 'wisata' ? 'Wisata' : 'Kuliner'}</h2>
 			<div class="mt-4 grid gap-4 md:grid-cols-2">
-				<div>
-					<label for="jam_buka" class="mb-1 block text-sm font-medium">Jam Buka</label>
-					<input id="jam_buka" name="jam_buka" value={place.jam_buka ?? ''} class={inputClass} />
+				<div class="md:col-span-2">
+					<RichTextEditor name="jam_buka" label="Jam Buka" bind:value={jamBuka} />
 				</div>
 				{#if type === 'wisata'}
 					<div class="md:col-span-2">

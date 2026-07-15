@@ -4,12 +4,15 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const sb = locals.supabase;
-	if (!sb) return { allPlaces: [] };
-	const { data } = await sb
-		.from('places')
-		.select('id, name, type')
-		.order('name', { ascending: true });
-	return { allPlaces: data ?? [] };
+	if (!sb) return { allPlaces: [], allCategories: [] };
+	const [{ data: places }, { data: cats }] = await Promise.all([
+		sb.from('places').select('id, name, type').order('name', { ascending: true }),
+		sb.from('places').select('categories').not('categories', 'is', null)
+	]);
+
+	const allCategories = [...new Set((cats ?? []).flatMap((r) => r.categories ?? []).filter(Boolean))].sort() as string[];
+
+	return { allPlaces: places ?? [], allCategories };
 };
 
 export const actions: Actions = {

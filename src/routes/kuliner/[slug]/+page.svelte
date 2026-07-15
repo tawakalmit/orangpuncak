@@ -53,7 +53,7 @@
 		{#if p.jam_buka}
 			<div class="rounded-xl bg-surface p-4 shadow-md">
 				<div class="text-xs text-ink/60">Jam Buka</div>
-				<div class="font-semibold text-brand">{p.jam_buka}</div>
+				<div class="prose prose-sm mt-1 max-w-none font-semibold text-brand">{@html p.jam_buka}</div>
 			</div>
 		{/if}
 		{#if p.harga_range}
@@ -102,7 +102,7 @@
 	{/if}
 
 	<section id="lokasi" class="mt-8">
-		<h2 class="section-title">Lokasi</h2>
+		<h2 class="section-title">Lokasi (klik untuk lihat)</h2>
 		<div class="mt-4 overflow-hidden rounded-xl shadow-md">
 			<iframe
 				title={`Peta lokasi ${p.name}`}
