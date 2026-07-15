@@ -4,8 +4,10 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import { injectAnalytics } from '@vercel/analytics/sveltekit';
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 
 	injectAnalytics();
+	injectSpeedInsights();
 
 	let { children } = $props();
 
