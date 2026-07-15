@@ -1,16 +1,16 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Card from '$lib/components/Card.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import type { VillaFacilities } from '$lib/types';
+	import type { Place, VillaFacilities } from '$lib/types';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	// State filter reaktif
-	let q = $state('');
-	let lokasi = $state('');
-	let jumlahKamar = $state('');
-	let status = $state('');
+	let q = $state(data.filter.q);
+	let lokasi = $state(data.filter.lokasi);
+	let status = $state(data.filter.status);
+	let jumlahKamar = $state(data.filter.kamar ? String(data.filter.kamar) : '');
 	let mobileOpen = $state(false);
 
 	const facilityOptions: { key: keyof VillaFacilities; label: string }[] = [
@@ -20,24 +20,68 @@
 		{ key: 'ac', label: 'AC' },
 		{ key: 'tenis_meja', label: 'Tenis Meja' }
 	];
-	let facilities = $state<Record<string, boolean>>({});
-
-	// Filtering reaktif — benar-benar berfungsi
-	const filtered = $derived(
-		data.villas.filter((v) => {
-			if (q) {
-				const hay = `${v.name} ${v.kode}`.toLowerCase();
-				if (!hay.includes(q.toLowerCase())) return false;
-			}
-			if (lokasi && v.lokasi !== lokasi) return false;
-			if (status && v.status !== status) return false;
-			if (jumlahKamar && (v.jumlah_kamar_tidur ?? 0) < Number(jumlahKamar)) return false;
-			for (const opt of facilityOptions) {
-				if (facilities[opt.key] && !v.facilities?.[opt.key]) return false;
-			}
-			return true;
-		})
+	let facilities = $state<Record<string, boolean>>(
+		Object.fromEntries((data.filter.facilities ?? []).map((f) => [f, true]))
 	);
+
+	let places = $state<Place[]>(data.places);
+	let hasMore = $state(data.hasMore);
+	let page = $state(0);
+	let loading = $state(false);
+	let sentinel = $state<HTMLDivElement | null>(null);
+
+	$effect(() => {
+		places = data.places;
+		hasMore = data.hasMore;
+		page = 0;
+	});
+
+	function buildParams(p: number) {
+		const params = new URLSearchParams();
+		params.set('type', 'villa');
+		params.set('page', String(p));
+		if (data.filter.q) params.set('q', data.filter.q);
+		if (data.filter.lokasi) params.set('lokasi', data.filter.lokasi);
+		if (data.filter.status) params.set('status', data.filter.status);
+		if (data.filter.kamar) params.set('kamar', String(data.filter.kamar));
+		for (const f of data.filter.facilities ?? []) params.append('fasilitas', f);
+		return params;
+	}
+
+	async function loadMore() {
+		if (loading || !hasMore) return;
+		loading = true;
+		const nextPage = page + 1;
+		const res = await fetch(`/api/places?${buildParams(nextPage).toString()}`);
+		const json = await res.json();
+		places = [...places, ...json.places];
+		hasMore = json.hasMore;
+		page = nextPage;
+		loading = false;
+	}
+
+	$effect(() => {
+		if (!sentinel) return;
+		const observer = new IntersectionObserver(
+			(entries) => { if (entries[0].isIntersecting) loadMore(); },
+			{ rootMargin: '300px' }
+		);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	});
+
+	function apply() {
+		const params = new URLSearchParams();
+		if (q) params.set('q', q);
+		if (lokasi) params.set('lokasi', lokasi);
+		if (status) params.set('status', status);
+		if (jumlahKamar) params.set('kamar', jumlahKamar);
+		for (const [k, v] of Object.entries(facilities)) {
+			if (v) params.append('fasilitas', k);
+		}
+		mobileOpen = false;
+		goto(`/villa?${params.toString()}`, { keepFocus: true });
+	}
 
 	function resetFilter() {
 		q = '';
@@ -45,12 +89,13 @@
 		jumlahKamar = '';
 		status = '';
 		facilities = {};
+		goto('/villa', { keepFocus: true });
 	}
 </script>
 
 <Seo
-	title={`${data.villas.length} Villa Puncak Murah & Nyaman — Sewa & Jual`}
-	description={`Pilihan ${data.villas.length} villa di Puncak untuk disewa atau dijual. Filter berdasarkan lokasi, jumlah kamar, dan fasilitas seperti kolam renang & wifi.`}
+	title={`${data.total} Villa Puncak Murah & Nyaman — Sewa & Jual`}
+	description={`Pilihan villa di Puncak untuk disewa atau dijual. Filter berdasarkan lokasi, jumlah kamar, dan fasilitas seperti kolam renang & wifi.`}
 	path="/villa"
 />
 
@@ -63,6 +108,7 @@
 			bind:value={q}
 			placeholder="mis. Villa Kabut / VP-001"
 			class="w-full rounded-md border border-ink/20 px-3 py-2"
+			onsearch={(e) => { q = (e.target as HTMLInputElement).value; apply(); }}
 		/>
 	</div>
 	<div>
@@ -99,7 +145,7 @@
 		</div>
 	</fieldset>
 	<div class="flex gap-2 pt-2">
-		<button type="button" class="btn-filter flex-1" onclick={() => (mobileOpen = false)}>
+		<button type="button" class="btn-filter flex-1" onclick={apply}>
 			Terapkan Filter
 		</button>
 		<button type="button" class="rounded-md border border-ink/20 px-4 py-2 text-sm" onclick={resetFilter}>
@@ -111,8 +157,7 @@
 <div class="mx-auto max-w-content px-4 py-8 2xl:px-0 lg:w-11/12">
 	<h1 class="section-title">Villa di Puncak</h1>
 	<p class="mt-2 text-ink/70">
-		Menampilkan <span class="font-semibold text-brand">{filtered.length}</span> dari
-		{data.villas.length} villa.
+		Menampilkan <span class="font-semibold text-brand">{data.total}</span> villa.
 	</p>
 
 	<!-- Tombol filter mobile -->
@@ -133,11 +178,25 @@
 
 		<!-- Grid hasil -->
 		<div class="lg:col-span-4">
-			{#if filtered.length}
+			{#if places.length}
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-					{#each filtered as place (place.id)}
+					{#each places as place (place.id)}
 						<Card {place} />
 					{/each}
+				</div>
+
+				<div bind:this={sentinel} class="mt-8 flex justify-center">
+					{#if loading}
+						<div class="flex items-center gap-2 text-sm text-ink/50">
+							<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+							</svg>
+							Memuat lebih banyak...
+						</div>
+					{:else if !hasMore}
+						<p class="text-sm text-ink/40">Semua {data.total} villa sudah ditampilkan</p>
+					{/if}
 				</div>
 			{:else}
 				<div class="rounded-xl bg-surface p-10 text-center text-ink/60 shadow-md">
@@ -148,7 +207,7 @@
 	</div>
 </div>
 
-<!-- Panel filter mobile: slide-in dari kiri -->
+<!-- Panel filter mobile -->
 <div
 	class="fixed inset-0 z-[70] bg-brand text-white transition-all duration-300 lg:hidden"
 	style:left={mobileOpen ? '0' : '-100vw'}

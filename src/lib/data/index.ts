@@ -86,8 +86,8 @@ export async function getPlaces(
 	opts: { q?: string; category?: string; lokasi?: string } = {}
 ): Promise<Place[]> {
 	if (supabase) {
-		let query = supabase.from('places').select(CARD_SELECT).eq('type', type);
-		if (opts.category) query = query.eq('category', opts.category);
+		let query = supabase.from('places').select(CARD_SELECT).eq('type', type).eq('published', true);
+		if (opts.category) query = query.contains('categories', [opts.category]);
 		if (opts.lokasi) query = query.eq('lokasi', opts.lokasi);
 		if (opts.q) query = query.ilike('name', `%${opts.q}%`);
 		const { data, error } = await query.order('created_at', { ascending: false });
@@ -101,6 +101,55 @@ export async function getPlaces(
 		list = list.filter((p) => p.name.toLowerCase().includes(q));
 	}
 	return list.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''));
+}
+
+export async function getPlacesPaginated(
+	type: PlaceType,
+	opts: { q?: string; category?: string; lokasi?: string; status?: string; kamar?: number; facilities?: string[]; page?: number; limit?: number } = {}
+): Promise<{ places: Place[]; hasMore: boolean; total: number }> {
+	const limit = opts.limit ?? 8;
+	const page = opts.page ?? 0;
+	const from = page * limit;
+	const to = from + limit - 1;
+
+	if (supabase) {
+		let query = supabase
+			.from('places')
+			.select(CARD_SELECT + ', jumlah_kamar_tidur, facilities', { count: 'exact' })
+			.eq('type', type)
+			.eq('published', true);
+		if (opts.category) query = query.contains('categories', [opts.category]);
+		if (opts.lokasi) query = query.eq('lokasi', opts.lokasi);
+		if (opts.q) query = query.ilike('name', `%${opts.q}%`);
+		if (opts.status) query = query.eq('status', opts.status);
+		if (opts.kamar) query = query.gte('jumlah_kamar_tidur', opts.kamar);
+		if (opts.facilities?.length) {
+			for (const f of opts.facilities) {
+				query = query.eq(`facilities->>${f}`, 'true');
+			}
+		}
+		const { data, error, count } = await query
+			.order('created_at', { ascending: false })
+			.range(from, to);
+		if (!error && data) {
+			const total = count ?? 0;
+			return { places: data as Place[], hasMore: to < total - 1, total };
+		}
+	}
+
+	// Fallback seed
+	let list = seedPlaces.filter((p) => p.type === type);
+	if (opts.category) list = list.filter((p) => p.category === opts.category);
+	if (opts.lokasi) list = list.filter((p) => p.lokasi === opts.lokasi);
+	if (opts.q) {
+		const q = opts.q.toLowerCase();
+		list = list.filter((p) => p.name.toLowerCase().includes(q));
+	}
+	if (opts.status) list = list.filter((p) => p.status === opts.status);
+	if (opts.kamar) list = list.filter((p) => (p.jumlah_kamar_tidur ?? 0) >= opts.kamar!);
+	list = list.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''));
+	const sliced = list.slice(from, to + 1);
+	return { places: sliced, hasMore: to + 1 < list.length, total: list.length };
 }
 
 export async function getVillas(filter: VillaFilter = {}): Promise<Place[]> {

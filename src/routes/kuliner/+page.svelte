@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import Card from '$lib/components/Card.svelte';
 	import Seo from '$lib/components/Seo.svelte';
+	import type { Place } from '$lib/types';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -9,6 +10,47 @@
 	let q = $state(data.filter.q);
 	let category = $state(data.filter.category);
 	let lokasi = $state(data.filter.lokasi);
+
+	let places = $state<Place[]>(data.places);
+	let hasMore = $state(data.hasMore);
+	let page = $state(0);
+	let loading = $state(false);
+	let sentinel = $state<HTMLDivElement | null>(null);
+
+	$effect(() => {
+		places = data.places;
+		hasMore = data.hasMore;
+		page = 0;
+	});
+
+	async function loadMore() {
+		if (loading || !hasMore) return;
+		loading = true;
+		const nextPage = page + 1;
+		const params = new URLSearchParams();
+		params.set('type', 'kuliner');
+		params.set('page', String(nextPage));
+		if (data.filter.q) params.set('q', data.filter.q);
+		if (data.filter.category) params.set('kategori', data.filter.category);
+		if (data.filter.lokasi) params.set('lokasi', data.filter.lokasi);
+
+		const res = await fetch(`/api/places?${params.toString()}`);
+		const json = await res.json();
+		places = [...places, ...json.places];
+		hasMore = json.hasMore;
+		page = nextPage;
+		loading = false;
+	}
+
+	$effect(() => {
+		if (!sentinel) return;
+		const observer = new IntersectionObserver(
+			(entries) => { if (entries[0].isIntersecting) loadMore(); },
+			{ rootMargin: '300px' }
+		);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	});
 
 	function apply(e: Event) {
 		e.preventDefault();
@@ -21,14 +63,14 @@
 </script>
 
 <Seo
-	title={`${data.places.length} Kuliner di Puncak`}
-	description={`Rekomendasi ${data.places.length} tempat makan, cafe, dan kuliner khas di kawasan Puncak Bogor & Cianjur.`}
+	title={`${data.total} Kuliner di Puncak`}
+	description={`Rekomendasi ${data.total} tempat makan, cafe, dan kuliner khas di kawasan Puncak Bogor & Cianjur.`}
 	path="/kuliner"
 />
 
 <div class="mx-auto max-w-content px-4 py-8 2xl:px-0 lg:w-11/12">
 	<h1 class="section-title">Kuliner di Puncak</h1>
-	<p class="mt-2 text-ink/70">Temukan {data.places.length} tempat makan &amp; cafe pilihan.</p>
+	<p class="mt-2 text-ink/70">Temukan {data.total} tempat makan &amp; cafe pilihan.</p>
 
 	<form class="mt-5 grid gap-3 rounded-xl bg-surface p-4 shadow-md md:grid-cols-4" onsubmit={apply}>
 		<div class="md:col-span-2">
@@ -39,6 +81,7 @@
 				bind:value={q}
 				placeholder="Nama tempat kuliner..."
 				class="w-full rounded-md border border-ink/20 px-3 py-2"
+				onsearch={(e) => { q = (e.target as HTMLInputElement).value; apply(e); }}
 			/>
 		</div>
 		<div>
@@ -60,11 +103,25 @@
 		</div>
 	</form>
 
-	{#if data.places.length}
+	{#if places.length}
 		<div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-			{#each data.places as place}
+			{#each places as place (place.id)}
 				<Card {place} />
 			{/each}
+		</div>
+
+		<div bind:this={sentinel} class="mt-8 flex justify-center">
+			{#if loading}
+				<div class="flex items-center gap-2 text-sm text-ink/50">
+					<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+					</svg>
+					Memuat lebih banyak...
+				</div>
+			{:else if !hasMore}
+				<p class="text-sm text-ink/40">Semua {data.total} kuliner sudah ditampilkan</p>
+			{/if}
 		</div>
 	{:else}
 		<p class="mt-10 text-center text-ink/60">Tidak ada hasil. Coba ubah filter.</p>

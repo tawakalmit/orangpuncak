@@ -1,4 +1,4 @@
-import { getCategories, getLocations, getPlaces } from '$lib/data';
+import { getCategories, getLocations, getPlacesPaginated } from '$lib/data';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ url }) => {
@@ -6,11 +6,11 @@ export const load: PageLoad = async ({ url }) => {
 	const category = url.searchParams.get('kategori') ?? '';
 	const lokasi = url.searchParams.get('lokasi') ?? '';
 
-	const [places, categories, locations] = await Promise.all([
-		getPlaces('kuliner', { q, category, lokasi }),
+	const [{ places, hasMore, total }, categories, locations] = await Promise.all([
+		getPlacesPaginated('kuliner', { q, category, lokasi, page: 0, limit: 8 }),
 		getCategories('kuliner'),
 		getLocations('kuliner')
 	]);
 
-	return { places, categories, locations, filter: { q, category, lokasi } };
+	return { places, hasMore, total, categories, locations, filter: { q, category, lokasi } };
 };
