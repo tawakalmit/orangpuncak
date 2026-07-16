@@ -10,7 +10,13 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.eq('id', params.id)
 		.maybeSingle();
 	if (err || !data) throw error(404, 'Artikel tidak ditemukan');
-	return { article: data };
+
+	const { data: places } = await locals.supabase
+		.from('places')
+		.select('id, name, type')
+		.order('name', { ascending: true });
+
+	return { article: data, allPlaces: places ?? [] };
 };
 
 export const actions: Actions = {

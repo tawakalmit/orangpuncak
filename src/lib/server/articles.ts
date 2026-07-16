@@ -14,7 +14,10 @@ export function parseArticleForm(form: FormData) {
 		cover_image: String(form.get('cover_image') ?? '').trim() || null,
 		tags: tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : [],
 		published: form.get('published') !== null ? form.get('published') === 'on' : true,
-		published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString()
+		published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
+		related_villa_ids: form.getAll('related_villa_ids').map((v) => String(v)).filter(Boolean),
+		related_wisata_ids: form.getAll('related_wisata_ids').map((v) => String(v)).filter(Boolean),
+		related_kuliner_ids: form.getAll('related_kuliner_ids').map((v) => String(v)).filter(Boolean)
 	};
 }
 

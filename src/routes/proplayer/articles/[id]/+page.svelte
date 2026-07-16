@@ -17,4 +17,4 @@
 </div>
 <h1 class="mt-2 font-heading text-2xl font-bold text-brand">Edit: {data.article.title}</h1>
 
-<ArticleForm article={data.article} error={form?.error} submitLabel="Perbarui" formAction="?/update" />
+<ArticleForm article={data.article} allPlaces={data.allPlaces} error={form?.error} submitLabel="Perbarui" formAction="?/update" />

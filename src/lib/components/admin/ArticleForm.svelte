@@ -1,16 +1,24 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import ImageUpload from './ImageUpload.svelte';
+	import NearbyPicker from './NearbyPicker.svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import type { Article } from '$lib/types';
+
+	interface PlaceOption {
+		id: string;
+		name: string;
+		type: string;
+	}
 
 	interface Props {
 		article?: Partial<Article> & { published?: boolean };
 		error?: string | null;
 		submitLabel?: string;
 		formAction?: string;
+		allPlaces?: PlaceOption[];
 	}
-	let { article = {}, error = null, submitLabel = 'Simpan', formAction = '' }: Props = $props();
+	let { article = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [] }: Props = $props();
 
 	let cover = $state(article.cover_image ?? '');
 	let content = $state(article.content ?? '');
@@ -19,6 +27,15 @@
 
 	const dateValue = article.published_at ? new Date(article.published_at).toISOString().slice(0, 10) : '';
 	const tagsValue = (article.tags ?? []).join(', ');
+
+	// Filter places by type
+	const villaOptions = $derived(allPlaces.filter((p) => p.type === 'villa'));
+	const wisataOptions = $derived(allPlaces.filter((p) => p.type === 'wisata'));
+	const kulinerOptions = $derived(allPlaces.filter((p) => p.type === 'kuliner'));
+
+	let relatedVilla = $state<string[]>(article.related_villa_ids ?? []);
+	let relatedWisata = $state<string[]>(article.related_wisata_ids ?? []);
+	let relatedKuliner = $state<string[]>(article.related_kuliner_ids ?? []);
 </script>
 
 <form
@@ -67,6 +84,35 @@
 		<label class="mt-4 flex items-center gap-2 text-sm">
 			<input type="checkbox" name="published" checked={article.id ? article.published ?? true : true} class="h-4 w-4 accent-brand" /> Tampilkan (published)
 		</label>
+	</section>
+
+	<!-- Relasi Places -->
+	<section class="rounded-xl bg-surface p-5 shadow-md">
+		<h2 class="font-heading font-semibold text-brand">Tempat Pilihan di Artikel Ini</h2>
+		<p class="mt-1 text-sm text-ink/60">Akan ditampilkan di halaman artikel sebagai "Villa Pilihan", "Wisata Pilihan", dan "Kuliner Pilihan".</p>
+		<div class="mt-4 grid gap-5 md:grid-cols-3">
+			<NearbyPicker
+				name="related_villa_ids"
+				label="Villa Pilihan"
+				options={villaOptions}
+				bind:selected={relatedVilla}
+				max={6}
+			/>
+			<NearbyPicker
+				name="related_wisata_ids"
+				label="Wisata Pilihan"
+				options={wisataOptions}
+				bind:selected={relatedWisata}
+				max={6}
+			/>
+			<NearbyPicker
+				name="related_kuliner_ids"
+				label="Kuliner Pilihan"
+				options={kulinerOptions}
+				bind:selected={relatedKuliner}
+				max={6}
+			/>
+		</div>
 	</section>
 
 	<div class="flex gap-3">

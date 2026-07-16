@@ -103,6 +103,9 @@ export interface Article {
 	published_at?: string | null;
 	created_at?: string;
 	updated_at?: string;
+	related_villa_ids?: string[] | null;
+	related_wisata_ids?: string[] | null;
+	related_kuliner_ids?: string[] | null;
 }
 
 export interface AdLead {

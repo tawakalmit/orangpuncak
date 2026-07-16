@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+	import Card from '$lib/components/Card.svelte';
+	import Carousel from '$lib/components/Carousel.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_URL } from '$lib/config';
 	import { formatTanggal } from '$lib/utils/format';
@@ -73,6 +75,31 @@
 		</div>
 	</div>
 </article>
+
+{#if data.relatedVilla?.length || data.relatedWisata?.length || data.relatedKuliner?.length}
+	<div class="mx-auto max-w-content px-4 2xl:px-0 lg:w-11/12">
+		{#if data.relatedVilla?.length}
+			<section class="mt-12">
+				<h2 class="section-title">Villa Pilihan</h2>
+				<div class="mt-4"><Carousel places={data.relatedVilla} /></div>
+			</section>
+		{/if}
+
+		{#if data.relatedWisata?.length}
+			<section class="mt-12">
+				<h2 class="section-title">Wisata Pilihan</h2>
+				<div class="mt-4"><Carousel places={data.relatedWisata} /></div>
+			</section>
+		{/if}
+
+		{#if data.relatedKuliner?.length}
+			<section class="mt-12">
+				<h2 class="section-title">Kuliner Pilihan</h2>
+				<div class="mt-4"><Carousel places={data.relatedKuliner} /></div>
+			</section>
+		{/if}
+	</div>
+{/if}
 
 {#if data.related.length}
 	<section class="mx-auto max-w-content px-4 pb-12 2xl:px-0">

@@ -1,6 +1,16 @@
 import { parseArticleForm, validateArticle } from '$lib/server/articles';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	const sb = locals.supabase;
+	if (!sb) return { allPlaces: [] };
+	const { data: places } = await sb
+		.from('places')
+		.select('id, name, type')
+		.order('name', { ascending: true });
+	return { allPlaces: places ?? [] };
+};
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
