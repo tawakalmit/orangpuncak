@@ -6,7 +6,7 @@ export const load: PageLoad = async ({ params }) => {
 	const article = await getArticleBySlug(params.slug);
 	if (!article) throw error(404, 'Artikel tidak ditemukan');
 	const all = await getArticles();
-	const related = all.filter((a) => a.slug !== params.slug).slice(0, 3);
+	const related = all.filter((a) => a.slug !== params.slug && a.id !== article.id).slice(0, 3);
 
 	// Fetch related places
 	const [relatedVilla, relatedWisata, relatedKuliner] = await Promise.all([
