@@ -64,3 +64,50 @@
 .konten-body h2 {
 	color: rgb(62 121 124 / var(--tw-text-opacity, 1));
 }
+
+/* Styling tabel di konten body */
+.konten-body table,
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.5rem 0;
+	font-size: 0.9rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 0 0 1px #b7c5c6;
+}
+
+.konten-body table th,
+.prose table th {
+	background-color: #3e797c;
+	color: #ffffff;
+	font-weight: 600;
+	text-align: left;
+	padding: 0.65rem 1rem;
+	border: 1px solid #2e5c5e;
+	font-size: 0.875rem;
+}
+
+.konten-body table td,
+.prose table td {
+	padding: 0.6rem 1rem;
+	border: 1px solid #c9d8d9;
+	vertical-align: top;
+	color: #2d3748;
+}
+
+.konten-body table tr:nth-child(even) td,
+.prose table tr:nth-child(even) td {
+	background-color: #f0f5f5;
+}
+
+.konten-body table tr:hover td,
+.prose table tr:hover td {
+	background-color: #e3eeee;
+}
+
+/* Responsive: scroll horizontal di layar kecil */
+.konten-body,
+.prose {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}

@@ -17,6 +17,7 @@
 
 	// state tombol toolbar aktif
 	let active = $state<Record<string, boolean>>({});
+	let showTableMenu = $state(false);
 
 	function refreshActive() {
 		if (!editor) return;
@@ -28,7 +29,8 @@
 			bullet: editor.isActive('bulletList'),
 			ordered: editor.isActive('orderedList'),
 			blockquote: editor.isActive('blockquote'),
-			link: editor.isActive('link')
+			link: editor.isActive('link'),
+			table: editor.isActive('table')
 		};
 	}
 
@@ -39,6 +41,10 @@
 			const { default: StarterKit } = await import('@tiptap/starter-kit');
 			const { default: Link } = await import('@tiptap/extension-link');
 			const { default: Image } = await import('@tiptap/extension-image');
+			const { Table } = await import('@tiptap/extension-table');
+			const { TableRow } = await import('@tiptap/extension-table-row');
+			const { TableCell } = await import('@tiptap/extension-table-cell');
+			const { TableHeader } = await import('@tiptap/extension-table-header');
 			if (destroyed) return;
 
 			editor = new Editor({
@@ -46,7 +52,11 @@
 				extensions: [
 					StarterKit,
 					Link.configure({ openOnClick: false, HTMLAttributes: { rel: 'noopener', target: '_blank' } }),
-					Image.configure({ inline: false, HTMLAttributes: { class: 'rounded-lg' } })
+					Image.configure({ inline: false, HTMLAttributes: { class: 'rounded-lg' } }),
+					Table.configure({ resizable: false }),
+					TableRow,
+					TableCell,
+					TableHeader
 				],
 				content: value || '',
 				onTransaction: () => {
@@ -87,6 +97,16 @@
 			return;
 		}
 		editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+	}
+
+	function insertTable() {
+		editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+		showTableMenu = false;
+	}
+
+	function tableCmd(fn: () => boolean | void) {
+		fn();
+		showTableMenu = false;
 	}
 
 	async function handleImageFile(e: Event) {
@@ -130,6 +150,38 @@
 				<input type="file" accept="image/*" class="hidden" onchange={handleImageFile} disabled={!cloudinaryConfigured || uploadingImg} />
 			</label>
 			<button type="button" class={btn} onclick={() => cmd(() => editor?.chain().focus().unsetAllMarks().clearNodes().run())} title="Hapus format">⨯ format</button>
+			<!-- Tabel -->
+			<span class="mx-1 h-5 w-px bg-ink/15"></span>
+			<div class="relative">
+				<button
+					type="button"
+					class="{btn} {active.table ? btnActive : ''}"
+					title="Tabel"
+					onclick={() => (showTableMenu = !showTableMenu)}
+				>⊞ Tabel</button>
+				{#if showTableMenu}
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<div
+						class="absolute left-0 top-full z-50 mt-1 w-48 rounded-md border border-ink/15 bg-white py-1 shadow-lg text-sm"
+						onmouseleave={() => (showTableMenu = false)}
+					>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={insertTable}>+ Sisipkan tabel (3×3)</button>
+						<hr class="my-1 border-ink/10" />
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().addColumnBefore().run())}>+ Kolom sebelum</button>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().addColumnAfter().run())}>+ Kolom sesudah</button>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().deleteColumn().run())}>− Hapus kolom</button>
+						<hr class="my-1 border-ink/10" />
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().addRowBefore().run())}>+ Baris sebelum</button>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().addRowAfter().run())}>+ Baris sesudah</button>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().deleteRow().run())}>− Hapus baris</button>
+						<hr class="my-1 border-ink/10" />
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().mergeCells().run())}>↔ Gabung sel</button>
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream" onclick={() => tableCmd(() => editor?.chain().focus().splitCell().run())}>⇔ Pisah sel</button>
+						<hr class="my-1 border-ink/10" />
+						<button type="button" class="w-full px-3 py-1.5 text-left hover:bg-cream text-red-600" onclick={() => tableCmd(() => editor?.chain().focus().deleteTable().run())}>✕ Hapus tabel</button>
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<!-- Editor mount point -->
@@ -143,3 +195,28 @@
 		Format teks disimpan sebagai HTML. Gambar diunggah ke Cloudinary lalu disisipkan di posisi kursor.
 	</p>
 </div>
+
+<style>
+	/* Styling tabel di dalam editor Tiptap */
+	:global(.ProseMirror table) {
+		border-collapse: collapse;
+		width: 100%;
+		margin: 1rem 0;
+		font-size: 0.9rem;
+	}
+	:global(.ProseMirror table td),
+	:global(.ProseMirror table th) {
+		border: 1px solid #d1d5db;
+		padding: 0.4rem 0.6rem;
+		vertical-align: top;
+		min-width: 2rem;
+	}
+	:global(.ProseMirror table th) {
+		background-color: #f3f4f6;
+		font-weight: 600;
+		text-align: left;
+	}
+	:global(.ProseMirror table .selectedCell) {
+		background-color: #dbeafe;
+	}
+</style>

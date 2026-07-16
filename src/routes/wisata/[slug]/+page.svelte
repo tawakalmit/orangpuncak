@@ -102,7 +102,7 @@
 	{#if p.tips}
 		<section class="mt-8 rounded-xl bg-muted p-5">
 			<h2 class="font-heading text-lg font-semibold text-brand">Tips Berkunjung</h2>
-			<div class="prose mt-2 max-w-none text-ink/80">{@html p.tips}</div>
+			<div class="prose mt-2 max-w-none text-ink/80 konten-body">{@html p.tips}</div>
 		</section>
 	{/if}
 
