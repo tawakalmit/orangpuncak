@@ -7,12 +7,12 @@
 	const cards = $derived(
 		data.counts
 			? [
-					{ label: 'Villa', value: data.counts.villa, href: '/admin/places?type=villa' },
-					{ label: 'Wisata', value: data.counts.wisata, href: '/admin/places?type=wisata' },
-					{ label: 'Kuliner', value: data.counts.kuliner, href: '/admin/places?type=kuliner' },
-					{ label: 'Artikel', value: data.counts.articles, href: '/admin/articles' },
-					{ label: 'Total Leads', value: data.counts.leads, href: '/admin/leads' },
-					{ label: 'Leads Baru', value: data.counts.newLeads, href: '/admin/leads' }
+					{ label: 'Villa', value: data.counts.villa, href: '/proplayer/places?type=villa' },
+					{ label: 'Wisata', value: data.counts.wisata, href: '/proplayer/places?type=wisata' },
+					{ label: 'Kuliner', value: data.counts.kuliner, href: '/proplayer/places?type=kuliner' },
+					{ label: 'Artikel', value: data.counts.articles, href: '/proplayer/articles' },
+					{ label: 'Total Leads', value: data.counts.leads, href: '/proplayer/leads' },
+					{ label: 'Leads Baru', value: data.counts.newLeads, href: '/proplayer/leads' }
 				]
 			: []
 	);
@@ -34,8 +34,8 @@
 	</div>
 
 	<div class="mt-8 flex flex-wrap gap-3">
-		<a href="/admin/places/new" class="btn-primary">+ Tambah Direktori</a>
-		<a href="/admin/articles/new" class="btn-action">+ Tambah Artikel</a>
+		<a href="/proplayer/places/new" class="btn-primary">+ Tambah Direktori</a>
+		<a href="/proplayer/articles/new" class="btn-action">+ Tambah Artikel</a>
 	</div>
 {:else}
 	<p class="mt-6 rounded-md bg-amber-50 px-4 py-3 text-amber-700">

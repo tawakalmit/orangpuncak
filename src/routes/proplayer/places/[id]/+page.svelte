@@ -10,7 +10,7 @@
 <Seo title={`Edit ${data.place.name}`} />
 
 <div class="flex items-center justify-between">
-	<a href="/admin/places" class="text-sm text-brand hover:underline">← Kembali</a>
+	<a href="/proplayer/places" class="text-sm text-brand hover:underline">← Kembali</a>
 	<form
 		method="POST"
 		action="?/delete"

@@ -26,6 +26,6 @@ export const actions: Actions = {
 		const { error } = await locals.supabase.from('places').insert(record);
 		if (error) return fail(500, { error: error.message });
 
-		throw redirect(303, '/admin/places');
+		throw redirect(303, '/proplayer/places');
 	}
 };

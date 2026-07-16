@@ -24,12 +24,12 @@ export const actions: Actions = {
 		const { error: err } = await locals.supabase.from('articles').update(record).eq('id', params.id);
 		if (err) return fail(500, { error: err.message });
 
-		throw redirect(303, '/admin/articles');
+		throw redirect(303, '/proplayer/articles');
 	},
 	delete: async ({ locals, params }) => {
 		if (!locals.supabase) return fail(500, { error: 'Supabase belum dikonfigurasi.' });
 		const { error: err } = await locals.supabase.from('articles').delete().eq('id', params.id);
 		if (err) return fail(500, { error: err.message });
-		throw redirect(303, '/admin/articles');
+		throw redirect(303, '/proplayer/articles');
 	}
 };

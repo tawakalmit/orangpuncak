@@ -13,8 +13,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.getUser = async () => null;
 
 		// Tanpa Supabase, panel admin tidak bisa berfungsi.
-		if (event.url.pathname.startsWith('/admin') && event.url.pathname !== '/admin/setup') {
-			throw redirect(303, '/admin/setup');
+		if (event.url.pathname.startsWith('/proplayer') && event.url.pathname !== '/proplayer/setup') {
+			throw redirect(303, '/proplayer/setup');
 		}
 		return resolve(event);
 	}
@@ -52,9 +52,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	};
 
 	// Proteksi route admin
-	if (event.url.pathname.startsWith('/admin') && event.url.pathname !== '/admin/login') {
+	if (event.url.pathname.startsWith('/proplayer') && event.url.pathname !== '/proplayer/login') {
 		const user = await event.locals.getUser();
-		if (!user) throw redirect(303, '/admin/login');
+		if (!user) throw redirect(303, '/proplayer/login');
 	}
 
 	return resolve(event, {

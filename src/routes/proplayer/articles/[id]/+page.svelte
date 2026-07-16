@@ -10,7 +10,7 @@
 <Seo title={`Edit ${data.article.title}`} />
 
 <div class="flex items-center justify-between">
-	<a href="/admin/articles" class="text-sm text-brand hover:underline">← Kembali</a>
+	<a href="/proplayer/articles" class="text-sm text-brand hover:underline">← Kembali</a>
 	<form method="POST" action="?/delete" use:enhance onsubmit={(e) => { if (!confirm('Hapus artikel ini?')) e.preventDefault(); }}>
 		<button class="text-sm text-red-600 hover:underline">Hapus</button>
 	</form>

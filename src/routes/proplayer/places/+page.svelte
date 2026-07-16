@@ -14,7 +14,7 @@
 	];
 
 	function setType(t: string) {
-		goto(t ? `/admin/places?type=${t}` : '/admin/places');
+		goto(t ? `/proplayer/places?type=${t}` : '/proplayer/places');
 	}
 </script>
 
@@ -22,7 +22,7 @@
 
 <div class="flex flex-wrap items-center justify-between gap-3">
 	<h1 class="font-heading text-2xl font-bold text-brand">Direktori</h1>
-	<a href="/admin/places/new" class="btn-primary">+ Tambah</a>
+	<a href="/proplayer/places/new" class="btn-primary">+ Tambah</a>
 </div>
 
 {#if form?.error}
@@ -65,7 +65,7 @@
 						{#if p.is_featured}<span class="rounded bg-brand px-1.5 py-0.5 text-xs text-white">Unggulan</span>{/if}
 					</td>
 					<td class="p-3 text-right">
-						<a href={`/admin/places/${p.id}`} class="text-brand hover:underline">Edit</a>
+						<a href={`/proplayer/places/${p.id}`} class="text-brand hover:underline">Edit</a>
 						<form
 							method="POST"
 							action="?/delete"

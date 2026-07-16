@@ -11,7 +11,7 @@
 
 <div class="flex items-center justify-between">
 	<h1 class="font-heading text-2xl font-bold text-brand">Artikel</h1>
-	<a href="/admin/articles/new" class="btn-primary">+ Tambah</a>
+	<a href="/proplayer/articles/new" class="btn-primary">+ Tambah</a>
 </div>
 
 {#if form?.error}
@@ -29,7 +29,7 @@
 					<td class="p-3 font-medium">{a.title}</td>
 					<td class="p-3 text-ink/70">{formatTanggal(a.published_at)}</td>
 					<td class="p-3 text-right">
-						<a href={`/admin/articles/${a.id}`} class="text-brand hover:underline">Edit</a>
+						<a href={`/proplayer/articles/${a.id}`} class="text-brand hover:underline">Edit</a>
 						<form method="POST" action="?/delete" class="ml-3 inline" use:enhance onsubmit={(e) => { if (!confirm(`Hapus "${a.title}"?`)) e.preventDefault(); }}>
 							<input type="hidden" name="id" value={a.id} />
 							<button class="text-red-600 hover:underline">Hapus</button>

@@ -71,6 +71,6 @@
 
 	<div class="flex gap-3">
 		<button type="submit" disabled={saving} class="btn-primary">{saving ? 'Menyimpan...' : submitLabel}</button>
-		<a href="/admin/articles" class="rounded-full border border-ink/20 px-6 py-3 font-medium">Batal</a>
+		<a href="/proplayer/articles" class="rounded-full border border-ink/20 px-6 py-3 font-medium">Batal</a>
 	</div>
 </form>

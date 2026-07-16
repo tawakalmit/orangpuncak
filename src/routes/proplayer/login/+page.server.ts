@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = await locals.getUser();
-	if (user) throw redirect(303, '/admin');
+	if (user) throw redirect(303, '/proplayer');
 	return {};
 };
 
@@ -25,6 +25,6 @@ export const actions: Actions = {
 			return fail(401, { email, error: 'Login gagal: ' + error.message });
 		}
 
-		throw redirect(303, '/admin');
+		throw redirect(303, '/proplayer');
 	}
 };

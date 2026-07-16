@@ -2,12 +2,12 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	throw redirect(303, '/admin');
+	throw redirect(303, '/proplayer');
 };
 
 export const actions: Actions = {
 	default: async ({ locals }) => {
 		await locals.supabase?.auth.signOut();
-		throw redirect(303, '/admin/login');
+		throw redirect(303, '/proplayer/login');
 	}
 };

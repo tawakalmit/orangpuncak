@@ -11,7 +11,7 @@
 
 	let { children } = $props();
 
-	const isAdmin = $derived($page.url.pathname.startsWith('/admin'));
+	const isAdmin = $derived($page.url.pathname.startsWith('/proplayer'));
 </script>
 
 {#if isAdmin}

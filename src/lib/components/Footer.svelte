@@ -45,6 +45,6 @@
 
 	<div class="bg-accent py-3 text-center text-sm font-medium text-ink">
 		© {year} {SITE_NAME} — Media &amp; Direktori Wisata Puncak.
-		<a href="/admin" class="ml-2 text-ink/60 hover:underline">Admin</a>
+		<a href="/proplayer" class="ml-2 text-ink/60 hover:underline">Admin</a>
 	</div>
 </footer>
