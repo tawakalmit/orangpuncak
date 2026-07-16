@@ -102,7 +102,7 @@
 {/if}
 
 {#if data.related.length}
-	<section class="mx-auto max-w-content px-4 py-12 2xl:px-0">
+	<section class="mx-auto max-w-content px-4 2xl:px-0 lg:w-11/12 py-12">
 		<h2 class="section-title">Artikel Lainnya</h2>
 		<div class="mt-4 grid gap-4 md:grid-cols-3">
 			{#each data.related as article}
