@@ -103,6 +103,9 @@ export interface Article {
 	published_at?: string | null;
 	created_at?: string;
 	updated_at?: string;
+	template?: 'artikel' | 'hub';
+	meta_title?: string | null;
+	meta_description?: string | null;
 	related_villa_ids?: string[] | null;
 	related_wisata_ids?: string[] | null;
 	related_kuliner_ids?: string[] | null;

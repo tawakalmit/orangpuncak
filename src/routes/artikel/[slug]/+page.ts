@@ -8,7 +8,6 @@ export const load: PageLoad = async ({ params }) => {
 	const all = await getArticles();
 	const related = all.filter((a) => a.slug !== params.slug && a.id !== article.id).slice(0, 3);
 
-	// Fetch related places
 	const [relatedVilla, relatedWisata, relatedKuliner] = await Promise.all([
 		getPlacesByIds(article.related_villa_ids ?? []),
 		getPlacesByIds(article.related_wisata_ids ?? []),

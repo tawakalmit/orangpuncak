@@ -15,6 +15,9 @@ export function parseArticleForm(form: FormData) {
 		tags: tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : [],
 		published: form.get('published') !== null ? form.get('published') === 'on' : true,
 		published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
+		template: (String(form.get('template') ?? 'artikel') === 'hub' ? 'hub' : 'artikel') as 'artikel' | 'hub',
+		meta_title: String(form.get('meta_title') ?? '').trim() || null,
+		meta_description: String(form.get('meta_description') ?? '').trim() || null,
 		related_villa_ids: form.getAll('related_villa_ids').map((v) => String(v)).filter(Boolean),
 		related_wisata_ids: form.getAll('related_wisata_ids').map((v) => String(v)).filter(Boolean),
 		related_kuliner_ids: form.getAll('related_kuliner_ids').map((v) => String(v)).filter(Boolean)

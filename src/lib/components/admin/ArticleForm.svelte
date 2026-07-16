@@ -66,6 +66,13 @@
 				<label for="published_at" class="mb-1 block text-sm font-medium">Tanggal Terbit</label>
 				<input id="published_at" name="published_at" type="date" value={dateValue} class={inputClass} />
 			</div>
+			<div>
+				<label for="template" class="mb-1 block text-sm font-medium">Template</label>
+				<select id="template" name="template" class={inputClass} value={article.template ?? 'artikel'}>
+					<option value="artikel">Artikel — tampilan standar</option>
+					<option value="hub">Hub — lebar + direktori tempat</option>
+				</select>
+			</div>
 			<div class="md:col-span-2">
 				<label for="tags" class="mb-1 block text-sm font-medium">Tags (pisah dengan koma)</label>
 				<input id="tags" name="tags" value={tagsValue} class={inputClass} placeholder="tips, cuaca, wisata" />
@@ -84,6 +91,24 @@
 		<label class="mt-4 flex items-center gap-2 text-sm">
 			<input type="checkbox" name="published" checked={article.id ? article.published ?? true : true} class="h-4 w-4 accent-brand" /> Tampilkan (published)
 		</label>
+	</section>
+
+	<!-- SEO -->
+	<section class="rounded-xl bg-surface p-5 shadow-md">
+		<h2 class="font-heading font-semibold text-brand">SEO</h2>
+		<p class="mt-1 text-sm text-ink/60">Kosongkan untuk menggunakan judul & ringkasan artikel sebagai fallback.</p>
+		<div class="mt-4 grid gap-4">
+			<div>
+				<label for="meta_title" class="mb-1 block text-sm font-medium">Meta Title</label>
+				<input id="meta_title" name="meta_title" value={article.meta_title ?? ''} class={inputClass} placeholder={article.title ?? 'Judul artikel'} maxlength="70" />
+				<p class="mt-1 text-xs text-ink/50">Maks. 70 karakter. Dipakai sebagai judul di hasil pencarian Google.</p>
+			</div>
+			<div>
+				<label for="meta_description" class="mb-1 block text-sm font-medium">Meta Description</label>
+				<textarea id="meta_description" name="meta_description" rows="2" class={inputClass} maxlength="160" placeholder={article.excerpt ?? 'Ringkasan artikel'}>{article.meta_description ?? ''}</textarea>
+				<p class="mt-1 text-xs text-ink/50">Maks. 160 karakter. Ditampilkan di bawah judul pada hasil pencarian.</p>
+			</div>
+		</div>
 	</section>
 
 	<!-- Relasi Places -->

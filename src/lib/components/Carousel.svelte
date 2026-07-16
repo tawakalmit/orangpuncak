@@ -31,7 +31,7 @@
 	});
 </script>
 
-<div bind:this={el} class="swiper px-1 pb-2">
+<div bind:this={el} class="swiper relative px-1 pb-2">
 	<div class="swiper-wrapper">
 		{#each places as place}
 			<div class="swiper-slide h-auto self-stretch">
@@ -39,6 +39,8 @@
 			</div>
 		{/each}
 	</div>
+	<div class="swiper-button-prev"></div>
+	<div class="swiper-button-next"></div>
 </div>
 
 <style>
