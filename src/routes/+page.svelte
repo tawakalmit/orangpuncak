@@ -81,7 +81,7 @@
 <section class="mx-auto max-w-content py-10 2xl:px-0 w-11/12">
 	<div class="flex items-end justify-between">
 		<h2 class="section-title">Pilihan Unggulan</h2>
-		<a href="/villa" class="text-sm font-medium text-brand hover:underline">Lihat semua villa →</a>
+		<!-- <a href="/villa" class="text-sm font-medium text-brand hover:underline">Lihat semua villa →</a> -->
 	</div>
 	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
 		{#each data.featured as place}
@@ -103,6 +103,43 @@
 			<a href="/villa" class="btn-action rounded-full">Cari Villa</a>
 			<a href="/kuliner" class="btn-action rounded-full">Kuliner Puncak</a>
 		</div>
+	</div>
+</section>
+
+<!-- Direktori: Wisata, Kuliner, Villa terbaru -->
+<section class="mx-auto max-w-content py-10 2xl:px-0 w-11/12">
+	<div class="flex items-end justify-between">
+		<h2 class="section-title">Wisata Terbaru</h2>
+		<a href="/wisata" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+	</div>
+	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+		{#each data.latestWisata as place (place.id)}
+			<Card {place} />
+		{/each}
+	</div>
+</section>
+
+<section class="mx-auto max-w-content py-10 2xl:px-0 w-11/12">
+	<div class="flex items-end justify-between">
+		<h2 class="section-title">Kuliner Terbaru</h2>
+		<a href="/kuliner" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+	</div>
+	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+		{#each data.latestKuliner as place (place.id)}
+			<Card {place} />
+		{/each}
+	</div>
+</section>
+
+<section class="mx-auto max-w-content py-10 2xl:px-0 w-11/12">
+	<div class="flex items-end justify-between">
+		<h2 class="section-title">Villa Terbaru</h2>
+		<a href="/villa" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+	</div>
+	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+		{#each data.latestVilla as place (place.id)}
+			<Card {place} />
+		{/each}
 	</div>
 </section>
 
