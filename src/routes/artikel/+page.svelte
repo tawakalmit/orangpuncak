@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Seo from '$lib/components/Seo.svelte';
 	import { formatTanggal } from '$lib/utils/format';
-	import { imgThumb } from '$lib/utils/cloudinary';
+	import { imgThumb } from '$lib/utils/imagekit';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();

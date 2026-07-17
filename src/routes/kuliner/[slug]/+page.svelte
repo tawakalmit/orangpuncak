@@ -5,7 +5,7 @@
 	import LazyMap from '$lib/components/LazyMap.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_URL } from '$lib/config';
-	import { imgCover } from '$lib/utils/cloudinary';
+	import { imgCover } from '$lib/utils/imagekit';
 	import { itemWaMessage, waLink } from '$lib/utils/whatsapp';
 	import { kulinerFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';

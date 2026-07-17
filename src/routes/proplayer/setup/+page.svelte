@@ -17,7 +17,7 @@
 			<li>Buat project di <a href="https://supabase.com" target="_blank" rel="noopener" class="text-brand underline">supabase.com</a>.</li>
 			<li>Jalankan SQL <code>supabase/migrations/0001_init.sql</code> lalu <code>supabase/seed.sql</code> di SQL Editor.</li>
 			<li>Isi <code>.env</code>: <code>PUBLIC_SUPABASE_URL</code> &amp; <code>PUBLIC_SUPABASE_ANON_KEY</code>.</li>
-			<li>Untuk upload gambar, isi <code>PUBLIC_CLOUDINARY_CLOUD_NAME</code> &amp; <code>PUBLIC_CLOUDINARY_UPLOAD_PRESET</code>.</li>
+			<li>Untuk upload gambar, isi <code>PUBLIC_IMAGEKIT_PUBLIC_KEY</code> &amp; <code>PUBLIC_IMAGEKIT_URL_ENDPOINT</code>.</li>
 			<li>
 				Buat user admin di Supabase: menu <strong>Authentication → Users → Add user</strong>
 				(isi email &amp; password, centang auto-confirm).

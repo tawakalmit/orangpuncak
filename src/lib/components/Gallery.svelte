@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { imgThumbSm } from '$lib/utils/cloudinary';
+	import { imgThumbSm } from '$lib/utils/imagekit';
 
 	interface Props {
 		images: string[];

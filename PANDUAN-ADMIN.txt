@@ -127,7 +127,7 @@ Menu "Artikel" -> "+ Tambah" (atau "Edit").
 - Ringkasan    : 1-2 kalimat. Tampil di kartu artikel & SEO/preview.
 - Konten       : isi pakai EDITOR (WYSIWYG). Tersedia: tebal, miring,
                  heading, list, kutipan, tautan, dan SISIP GAMBAR
-                 (tombol gambar -> upload otomatis ke Cloudinary).
+                 (tombol gambar -> upload otomatis ke ImageKit).
 - Cover        : gambar utama artikel. Rasio 16:9.
 - Centang "Tampilkan" : agar artikel terbit di situs.
 

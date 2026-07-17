@@ -4,7 +4,7 @@
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_NAME, SITE_TAGLINE, SITE_URL } from '$lib/config';
 	import { formatTanggal } from '$lib/utils/format';
-	import { imgThumb } from '$lib/utils/cloudinary';
+	import { imgThumb } from '$lib/utils/imagekit';
 	import { waLink } from '$lib/utils/whatsapp';
 	import type { PageData } from './$types';
 

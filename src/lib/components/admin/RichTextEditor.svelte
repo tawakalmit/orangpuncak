@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type { Editor } from '@tiptap/core';
-	import { cloudinaryConfigured, uploadToCloudinary } from '$lib/utils/cloudinary';
+	import { imagekitConfigured, uploadToImageKit } from '$lib/utils/imagekit';
 
 	interface Props {
 		value?: string;
@@ -115,8 +115,8 @@
 		imgError = '';
 		uploadingImg = true;
 		try {
-			const result = await uploadToCloudinary(input.files[0]);
-			editor.chain().focus().setImage({ src: result.secure_url, alt: input.files[0].name }).run();
+			const result = await uploadToImageKit(input.files[0]);
+			editor.chain().focus().setImage({ src: result.url, alt: input.files[0].name }).run();
 		} catch (err) {
 			imgError = err instanceof Error ? err.message : 'Upload gambar gagal.';
 		} finally {
@@ -145,9 +145,9 @@
 			<button type="button" class="{btn} {active.blockquote ? btnActive : ''}" onclick={() => cmd(() => editor?.chain().focus().toggleBlockquote().run())} title="Quote">❝</button>
 			<span class="mx-1 h-5 w-px bg-ink/15"></span>
 			<button type="button" class="{btn} {active.link ? btnActive : ''}" onclick={setLink} title="Tautan">🔗</button>
-			<label class="{btn} cursor-pointer" title={cloudinaryConfigured ? 'Sisipkan gambar (Cloudinary)' : 'Cloudinary belum dikonfigurasi'} class:opacity-50={!cloudinaryConfigured || uploadingImg}>
+			<label class="{btn} cursor-pointer" title={imagekitConfigured ? 'Sisipkan gambar (ImageKit)' : 'ImageKit belum dikonfigurasi'} class:opacity-50={!imagekitConfigured || uploadingImg}>
 				{uploadingImg ? '⏳ Upload...' : '🖼️ Gambar'}
-				<input type="file" accept="image/*" class="hidden" onchange={handleImageFile} disabled={!cloudinaryConfigured || uploadingImg} />
+				<input type="file" accept="image/*" class="hidden" onchange={handleImageFile} disabled={!imagekitConfigured || uploadingImg} />
 			</label>
 			<button type="button" class={btn} onclick={() => cmd(() => editor?.chain().focus().unsetAllMarks().clearNodes().run())} title="Hapus format">⨯ format</button>
 			<!-- Tabel -->
@@ -192,7 +192,7 @@
 	<textarea {name} class="hidden" bind:value></textarea>
 	{#if imgError}<p class="mt-1 text-sm text-red-600">{imgError}</p>{/if}
 	<p class="mt-1 text-xs text-ink/50">
-		Format teks disimpan sebagai HTML. Gambar diunggah ke Cloudinary lalu disisipkan di posisi kursor.
+		Format teks disimpan sebagai HTML. Gambar diunggah ke ImageKit lalu disisipkan di posisi kursor.
 	</p>
 </div>
 

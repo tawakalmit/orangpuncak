@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Place } from '$lib/types';
 	import { formatRupiah } from '$lib/utils/format';
-	import { imgThumb } from '$lib/utils/cloudinary';
+	import { imgThumb } from '$lib/utils/imagekit';
 
 	interface Props {
 		place: Place;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { imgCover } from '$lib/utils/cloudinary';
+	import { imgCover } from '$lib/utils/imagekit';
 
 	interface Slide {
 		image: string;

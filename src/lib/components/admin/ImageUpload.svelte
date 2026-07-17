@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cloudinaryConfigured, uploadToCloudinary, imgThumb } from '$lib/utils/cloudinary';
+	import { imagekitConfigured, uploadToImageKit, imgThumb } from '$lib/utils/imagekit';
 
 	interface Props {
 		/** URL tunggal (cover) atau daftar URL (gallery) */
@@ -29,8 +29,8 @@
 		uploading = true;
 		try {
 			const files = Array.from(input.files);
-			const results = await Promise.all(files.map((f) => uploadToCloudinary(f)));
-			const urls = results.map((r) => r.secure_url);
+			const results = await Promise.all(files.map((f) => uploadToImageKit(f)));
+			const urls = results.map((r) => r.url);
 			if (multiple) {
 				values = [...values, ...urls];
 			} else {
@@ -60,10 +60,10 @@
 <div>
 	<span class="mb-1 block text-sm font-medium">{label}</span>
 
-	{#if !cloudinaryConfigured}
+	{#if !imagekitConfigured}
 		<p class="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700">
-			Cloudinary belum dikonfigurasi. Isi <code>PUBLIC_CLOUDINARY_CLOUD_NAME</code> &amp;
-			<code>PUBLIC_CLOUDINARY_UPLOAD_PRESET</code> di <code>.env</code>. Untuk sementara kamu bisa
+			ImageKit belum dikonfigurasi. Isi <code>PUBLIC_IMAGEKIT_PUBLIC_KEY</code> &amp;
+			<code>PUBLIC_IMAGEKIT_URL_ENDPOINT</code> di <code>.env</code>. Untuk sementara kamu bisa
 			menempel URL gambar manual di bawah.
 		</p>
 	{/if}
@@ -106,7 +106,7 @@
 				{multiple}
 				class="hidden"
 				onchange={handleFiles}
-				disabled={uploading || !cloudinaryConfigured}
+				disabled={uploading || !imagekitConfigured}
 			/>
 		</label>
 		{#if uploading}<span class="text-sm text-ink/60">Tunggu sebentar...</span>{/if}
