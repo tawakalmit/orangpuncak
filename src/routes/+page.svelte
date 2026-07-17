@@ -90,25 +90,18 @@
 	</div>
 </section>
 
-<!-- Cara Booking ringkas -->
+<!-- CTA Eksplor -->
 <section class="bg-muted py-10">
-	<div class="mx-auto max-w-content 2xl:px-0 w-11/12">
-		<h2 class="section-title text-center">Cara Booking / Reservasi</h2>
-		<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-			{#each langkahBooking as step}
-				<div class="rounded-xl bg-surface p-5 shadow-md">
-					<div
-						class="flex h-10 w-10 items-center justify-center rounded-full bg-brand font-heading font-bold text-white"
-					>
-						{step.n}
-					</div>
-					<h3 class="mt-3 font-bold">{step.t}</h3>
-					<p class="mt-1 text-sm text-ink/70">{step.d}</p>
-				</div>
-			{/each}
-		</div>
-		<div class="mt-8 text-center">
-			<a href="/cara-booking" class="btn-primary">Pelajari Cara Booking</a>
+	<div class="mx-auto flex max-w-content flex-col items-center gap-4 px-4 text-center 2xl:px-0">
+		<h2 class="section-title">Eksplor Kawasan Puncak</h2>
+		<p class="max-w-2xl text-ink/70">
+			Dari hutan pinus hingga kebun teh, dari villa keluarga hingga cafe estetik — semua ada di
+			Puncak. Mulai jelajahi sekarang.
+		</p>
+		<div class="flex flex-wrap justify-center gap-3">
+			<a href="/wisata" class="btn-action rounded-full">Jelajah Wisata</a>
+			<a href="/villa" class="btn-action rounded-full">Cari Villa</a>
+			<a href="/kuliner" class="btn-action rounded-full">Kuliner Puncak</a>
 		</div>
 	</div>
 </section>
@@ -142,18 +135,25 @@
 	</section>
 {/if}
 
-<!-- CTA Eksplor -->
+<!-- Cara Booking ringkas -->
 <section class="bg-muted py-10">
-	<div class="mx-auto flex max-w-content flex-col items-center gap-4 px-4 text-center 2xl:px-0">
-		<h2 class="section-title">Eksplor Kawasan Puncak</h2>
-		<p class="max-w-2xl text-ink/70">
-			Dari hutan pinus hingga kebun teh, dari villa keluarga hingga cafe estetik — semua ada di
-			Puncak. Mulai jelajahi sekarang.
-		</p>
-		<div class="flex flex-wrap justify-center gap-3">
-			<a href="/wisata" class="btn-primary">Jelajah Wisata</a>
-			<a href="/villa" class="btn-action">Cari Villa</a>
-			<a href="/kuliner" class="btn-action">Kuliner Puncak</a>
+	<div class="mx-auto max-w-content 2xl:px-0 w-11/12">
+		<h2 class="section-title text-center">Cara Booking / Reservasi</h2>
+		<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+			{#each langkahBooking as step}
+				<div class="rounded-xl bg-surface p-5 shadow-md">
+					<div
+						class="flex h-10 w-10 items-center justify-center rounded-full bg-brand font-heading font-bold text-white"
+					>
+						{step.n}
+					</div>
+					<h3 class="mt-3 font-bold">{step.t}</h3>
+					<p class="mt-1 text-sm text-ink/70">{step.d}</p>
+				</div>
+			{/each}
+		</div>
+		<div class="mt-8 text-center">
+			<a href="/cara-booking" class="btn-primary">Pelajari Cara Booking</a>
 		</div>
 	</div>
 </section>
