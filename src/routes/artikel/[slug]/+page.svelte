@@ -5,7 +5,7 @@
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_URL } from '$lib/config';
 	import { formatTanggal } from '$lib/utils/format';
-	import { imgCover, imgThumb } from '$lib/utils/cloudinary';
+	import { imgCover, imgThumb } from '$lib/utils/imagekit';
 	import { artikelFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';
 

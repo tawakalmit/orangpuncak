@@ -15,10 +15,10 @@ semua halaman. Baca sekali, ikuti tiap upload.
 - Orientasi     : LANDSCAPE (mendatar) untuk hampir semua slot.
                   Hindari foto portrait/tegak untuk cover & banner.
 - Resolusi      : unggah versi BESAR & tajam. Sistem otomatis
-                  mengecilkan + mengoptimasi (Cloudinary f_auto,q_auto).
+                  mengecilkan + mengoptimasi (ImageKit f-auto,q-80).
                   Lebih baik kebesaran daripada pecah/buram.
 - Ukuran file   : idealnya < 3 MB per foto (maks ~8 MB).
-                  Tidak perlu kompres manual — biar Cloudinary yang
+                  Tidak perlu kompres manual — biar ImageKit yang
                   optimasi. Cukup pastikan tidak buram.
 - Hindari       : watermark mencolok, teks tertempel di foto,
                   bingkai/border, tanggal kamera, foto blur/gelap.
@@ -63,7 +63,7 @@ minimum yang disarankan agar tidak pecah. Unggah lebih besar = OK.
     - Minimum    : 1200 x 675 px
 
 [E] GAMBAR DI DALAM KONTEN ARTIKEL (editor WYSIWYG)
-    - Unggah lewat tombol gambar di editor (otomatis ke Cloudinary).
+    - Unggah lewat tombol gambar di editor (otomatis ke ImageKit).
     - Disarankan : lebar 1200-1600 px, landscape.
     - Hindari    : gambar super tinggi/panjang yang mengganggu baca.
 
@@ -91,7 +91,7 @@ minimum yang disarankan agar tidak pecah. Unggah lebih besar = OK.
 ----------------------------------------------------------------
 - Buka /admin -> pilih item (Direktori atau Artikel).
 - Klik "Pilih Gambar" (cover) atau "Tambah Gambar" (galeri).
-  Gambar otomatis terunggah ke Cloudinary dan URL tersimpan.
+  Gambar otomatis terunggah ke ImageKit dan URL tersimpan.
 - Alternatif: tempel URL gambar langsung di kolom yang tersedia.
 - Tunggu sampai pratinjau muncul sebelum menekan Simpan/Perbarui.
 

@@ -7,7 +7,7 @@
 	import { SITE_URL } from '$lib/config';
 	import type { VillaFacilities } from '$lib/types';
 	import { formatRupiah, youtubeEmbed } from '$lib/utils/format';
-	import { imgCover } from '$lib/utils/cloudinary';
+	import { imgCover } from '$lib/utils/imagekit';
 	import { villaWaMessage, waLink, type WaAction } from '$lib/utils/whatsapp';
 	import { villaFaqJsonLd } from '$lib/utils/faqJsonLd';
 	import type { PageData } from './$types';

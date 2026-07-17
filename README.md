@@ -48,22 +48,22 @@ Variabel di `.env`:
 
 ## Panel Admin
 
-Panel admin tersedia di **`/admin`** (CRUD direktori & artikel, kelola leads, upload gambar via Cloudinary). Memerlukan Supabase aktif.
+Panel admin tersedia di **`/admin`** (CRUD direktori & artikel, kelola leads, upload gambar via ImageKit). Memerlukan Supabase aktif.
 
 ### Aktifkan
 1. Isi `.env`: `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`.
 2. Jalankan `supabase/migrations/0001_init.sql` + `supabase/seed.sql`.
 3. Buat user admin di Supabase: **Authentication → Users → Add user** (isi email & password, centang auto-confirm).
-4. (Upload gambar) Isi `PUBLIC_CLOUDINARY_CLOUD_NAME` & `PUBLIC_CLOUDINARY_UPLOAD_PRESET`.
+4. (Upload gambar) Isi `PUBLIC_IMAGEKIT_PUBLIC_KEY` & `PUBLIC_IMAGEKIT_URL_ENDPOINT`.
 5. Restart `pnpm dev`, buka **`/admin/login`**.
 
 > Tanpa Supabase, `/admin` otomatis diarahkan ke `/admin/setup` berisi panduan ini.
 
-### Cloudinary (upload gambar)
-- Buat akun di [cloudinary.com](https://cloudinary.com).
-- Dashboard → **Settings → Upload → Upload presets** → tambah preset baru, set **Signing Mode = Unsigned**, simpan nama preset.
-- Catat **Cloud name** (di dashboard utama) dan **nama preset** unsigned tadi, lalu isi ke `.env`.
-- Komponen upload mengirim file langsung dari browser ke Cloudinary (unsigned) dan menyimpan `secure_url` ke database. Bila Cloudinary belum diisi, tersedia fallback tempel-URL manual.
+### ImageKit (upload gambar)
+- Buat akun di [imagekit.io](https://imagekit.io).
+- Dapatkan **Public Key**, **Private Key**, dan **URL Endpoint** di dashboard: **Developer → API Keys**.
+- Isi ketiga nilai tersebut ke `.env` (`PUBLIC_IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `PUBLIC_IMAGEKIT_URL_ENDPOINT`).
+- Alur upload: browser meminta `token/signature/expire` dari `/api/imagekit-auth` (server SvelteKit), lalu upload file langsung ke ImageKit. Private key tidak pernah keluar dari server.
 
 ### Fitur admin
 - **Dashboard** — ringkasan jumlah villa/wisata/kuliner/artikel/leads.
@@ -114,8 +114,9 @@ serverless function — SSR penuh aktif (penting untuk SEO & panel admin).
    | `PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` |
    | `PUBLIC_SUPABASE_ANON_KEY` | `eyJhbGci...` (anon key) |
    | `PUBLIC_WHATSAPP_NUMBER` | `6281234567890` |
-   | `PUBLIC_CLOUDINARY_CLOUD_NAME` | `nama-cloud` |
-   | `PUBLIC_CLOUDINARY_UPLOAD_PRESET` | `preset-unsigned` |
+   | `PUBLIC_IMAGEKIT_PUBLIC_KEY` | `public_xxxxxxxxxxxx` |
+   | `IMAGEKIT_PRIVATE_KEY` | `private_xxxxxxxxxxxx` |
+   | `PUBLIC_IMAGEKIT_URL_ENDPOINT` | `https://ik.imagekit.io/your_id` |
    | `PUBLIC_SITE_URL` | `https://orangpuncak.com` |
 
 4. **Deploy.**
@@ -124,7 +125,7 @@ serverless function — SSR penuh aktif (penting untuk SEO & panel admin).
 ### Setelah deploy
 - Pastikan `supabase/migrations/0001_init.sql` + `seed.sql` sudah dijalankan di project Supabase, dan user admin sudah dibuat (Authentication → Users).
 - Di **Supabase → Authentication → URL Configuration**, tambahkan domain produksi (`https://orangpuncak.com`) ke Site URL / Redirect URLs.
-- Di **Cloudinary**, pastikan upload preset berstatus *unsigned*.
+- Di **ImageKit**, pastikan opsi "Allow client-side file upload without authentication" aktif.
 - Cek `https://orangpuncak.com/sitemap.xml` dan `robots.txt` dapat diakses, lalu daftarkan sitemap di Google Search Console.
 
 > **Catatan:** saat build mungkin muncul warning `@opentelemetry/api` (peer dependency opsional Supabase) — aman diabaikan, tidak memengaruhi aplikasi.
