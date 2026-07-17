@@ -6,12 +6,12 @@ export const load: PageLoad = async () => {
 		getFeaturedPlaces('villa', 4),
 		getFeaturedPlaces('wisata', 4),
 		getLatestPlaces('villa', 8),
-		getArticles(3)
+		getArticles({ limit: 3 })
 	]);
 
 	return {
 		featured: [...featuredVillas, ...featuredWisata].slice(0, 8),
 		latestVilla,
-		articles
+		articles: articles.articles
 	};
 };

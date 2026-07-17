@@ -15,7 +15,6 @@
 	let hasMore = $state(data.hasMore);
 	let page = $state(0);
 	let loading = $state(false);
-	let sentinel = $state<HTMLDivElement | null>(null);
 
 	$effect(() => {
 		places = data.places;
@@ -33,24 +32,26 @@
 		if (data.filter.q) params.set('q', data.filter.q);
 		if (data.filter.category) params.set('kategori', data.filter.category);
 		if (data.filter.lokasi) params.set('lokasi', data.filter.lokasi);
-
-		const res = await fetch(`/api/places?${params.toString()}`);
-		const json = await res.json();
-		places = [...places, ...json.places];
-		hasMore = json.hasMore;
-		page = nextPage;
-		loading = false;
+		try {
+			const res = await fetch(`/api/places?${params.toString()}`);
+			const json = await res.json();
+			places = [...places, ...json.places];
+			hasMore = json.hasMore;
+			page = nextPage;
+		} finally {
+			loading = false;
+		}
 	}
 
-	$effect(() => {
-		if (!sentinel) return;
+	// use: action — observer dibuat tepat saat elemen masuk DOM, destroy saat keluar
+	function sentinel(node: HTMLElement) {
 		const observer = new IntersectionObserver(
-			(entries) => { if (entries[0].isIntersecting) loadMore(); },
-			{ rootMargin: '300px' }
+			([entry]) => { if (entry.isIntersecting) loadMore(); },
+			{ rootMargin: '0px' }
 		);
-		observer.observe(sentinel);
-		return () => observer.disconnect();
-	});
+		observer.observe(node);
+		return { destroy: () => observer.disconnect() };
+	}
 
 	function apply(e: Event) {
 		e.preventDefault();
@@ -60,6 +61,15 @@
 		if (lokasi) params.set('lokasi', lokasi);
 		goto(`/kuliner?${params.toString()}`, { keepFocus: true });
 	}
+
+	function clearFilter() {
+		q = '';
+		category = '';
+		lokasi = '';
+		goto('/kuliner', { keepFocus: true });
+	}
+
+	const hasFilter = $derived(!!(data.filter.q || data.filter.category || data.filter.lokasi));
 </script>
 
 <Seo
@@ -72,7 +82,7 @@
 	<h1 class="section-title">Kuliner di Puncak</h1>
 	<p class="mt-2 text-ink/70">Temukan {data.total} tempat makan &amp; cafe pilihan.</p>
 
-	<form class="mt-5 grid gap-3 rounded-xl bg-surface p-4 shadow-md md:grid-cols-4" onsubmit={apply}>
+	<form class="mt-5 grid gap-3 rounded-xl bg-surface p-4 shadow-md md:grid-cols-3" onsubmit={apply}>
 		<div class="md:col-span-2">
 			<label for="q" class="mb-1 block text-sm font-medium">Cari</label>
 			<input
@@ -80,16 +90,9 @@
 				type="search"
 				bind:value={q}
 				placeholder="Nama tempat kuliner..."
-				class="w-full rounded-md border border-ink/20 px-3 py-2"
+				class="w-full rounded-md border border-ink/20 px-3 py-2 [&::-webkit-search-cancel-button]:hidden"
 				onsearch={(e) => { q = (e.target as HTMLInputElement).value; apply(e); }}
 			/>
-		</div>
-		<div>
-			<label for="kategori" class="mb-1 block text-sm font-medium">Kategori</label>
-			<select id="kategori" bind:value={category} class="w-full rounded-md border border-ink/20 px-3 py-2">
-				<option value="">Semua</option>
-				{#each data.categories as c}<option value={c}>{c}</option>{/each}
-			</select>
 		</div>
 		<div>
 			<label for="lokasi" class="mb-1 block text-sm font-medium">Lokasi</label>
@@ -98,8 +101,11 @@
 				{#each data.locations as l}<option value={l}>{l}</option>{/each}
 			</select>
 		</div>
-		<div class="md:col-span-4">
-			<button type="submit" class="btn-filter w-full md:w-auto">Terapkan Filter</button>
+		<div class="md:col-span-3 flex gap-2">
+			<button type="submit" class="btn-filter">Cari Kuliner</button>
+			{#if hasFilter}
+				<button type="button" onclick={clearFilter} class="rounded-md border border-ink/20 px-4 py-2 text-sm text-ink/60 hover:bg-muted transition">Hapus Filter</button>
+			{/if}
 		</div>
 	</form>
 
@@ -110,7 +116,7 @@
 			{/each}
 		</div>
 
-		<div bind:this={sentinel} class="mt-8 flex justify-center">
+		<div use:sentinel class="mt-8 flex justify-center">
 			{#if loading}
 				<div class="flex items-center gap-2 text-sm text-ink/50">
 					<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">

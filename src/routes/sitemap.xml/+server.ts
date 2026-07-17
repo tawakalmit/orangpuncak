@@ -18,11 +18,11 @@ function iso(date?: string | null): string | undefined {
 }
 
 export const GET: RequestHandler = async () => {
-	const [wisata, villa, kuliner, articles] = await Promise.all([
+	const [wisata, villa, kuliner, { articles }] = await Promise.all([
 		getPlaces('wisata'),
 		getPlaces('villa'),
 		getPlaces('kuliner'),
-		getArticles()
+		getArticles({ limit: 1000 })
 	]);
 
 	const staticEntries: UrlEntry[] = [

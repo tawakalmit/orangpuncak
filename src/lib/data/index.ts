@@ -215,6 +215,95 @@ export async function getPlacesByIds(ids: string[]): Promise<Place[]> {
 	return seedPlaces.filter((p) => ids.includes(p.id));
 }
 
+/**
+ * Ambil nearby places dengan fallback otomatis berdasarkan lokasi.
+ * - Jika ids ada → pakai ids tersebut sebagai prioritas
+ * - Jika ids kosong atau kurang dari `limit` → tambal dengan places
+ *   bertipe sama, lokasi sama, bukan diri sendiri (excludeId)
+ */
+export async function getNearbyWithFallback(
+	type: PlaceType,
+	ids: string[] | null | undefined,
+	lokasi: string | null | undefined,
+	excludeId: string,
+	limit = 6
+): Promise<Place[]> {
+	const pickedIds = ids ?? [];
+	const pinned = await getPlacesByIds(pickedIds);
+
+	// Sudah cukup dari ids
+	if (pinned.length >= limit) return pinned.slice(0, limit);
+
+	// Butuh fallback — ambil dari lokasi yang sama
+	const needed = limit - pinned.length;
+	const pinnedIds = new Set(pickedIds);
+
+	if (lokasi) {
+		if (supabase) {
+			const { data, error } = await supabase
+				.from('places')
+				.select(CARD_SELECT)
+				.eq('type', type)
+				.eq('lokasi', lokasi)
+				.eq('published', true)
+				.neq('id', excludeId)
+				.order('created_at', { ascending: false })
+				.limit(limit + pinnedIds.size); // ambil lebih, filter duplikat di bawah
+			if (!error && data) {
+				const extras = (data as Place[])
+					.filter((p) => !pinnedIds.has(p.id))
+					.slice(0, needed);
+				return [...pinned, ...extras];
+			}
+		}
+		// Fallback seed
+		const extras = seedPlaces
+			.filter(
+				(p) =>
+					p.type === type &&
+					p.lokasi === lokasi &&
+					p.id !== excludeId &&
+					!pinnedIds.has(p.id)
+			)
+			.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))
+			.slice(0, needed);
+		return [...pinned, ...extras];
+	}
+
+	return pinned;
+}
+
+/**
+ * Ambil places secara acak (Fisher-Yates shuffle di server).
+ * Setiap pemanggilan menghasilkan urutan berbeda → tiap reload berbeda.
+ */
+export async function getRandomPlaces(type: PlaceType, limit = 6): Promise<Place[]> {
+	if (supabase) {
+		// Ambil lebih banyak lalu acak di server, hindari ORDER BY RANDOM() yang lambat
+		const { data, error } = await supabase
+			.from('places')
+			.select(CARD_SELECT)
+			.eq('type', type)
+			.eq('published', true)
+			.order('created_at', { ascending: false })
+			.limit(40);
+		if (!error && data) {
+			const arr = data as Place[];
+			for (let i = arr.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[arr[i], arr[j]] = [arr[j], arr[i]];
+			}
+			return arr.slice(0, limit);
+		}
+	}
+	const arr = [...seedPlaces.filter((p) => p.type === type)];
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+	return arr.slice(0, limit);
+}
+
 export async function getLocations(type: PlaceType): Promise<string[]> {
 	const all = await getPlaces(type);
 	return Array.from(new Set(all.map((p) => p.lokasi).filter(Boolean) as string[])).sort();
@@ -225,20 +314,57 @@ export async function getCategories(type: PlaceType): Promise<string[]> {
 	return Array.from(new Set(all.map((p) => p.category).filter(Boolean) as string[])).sort();
 }
 
-export async function getArticles(limit?: number): Promise<Article[]> {
+/**
+ * Ambil categories dan locations dalam satu query.
+ * Menggantikan getCategories() + getLocations() secara terpisah.
+ */
+export async function getFilterOptions(type: PlaceType): Promise<{ categories: string[]; locations: string[] }> {
+	if (supabase) {
+		const { data, error } = await supabase
+			.from('places')
+			.select('category, lokasi')
+			.eq('type', type)
+			.eq('published', true);
+		if (!error && data) {
+			const categories = Array.from(new Set(data.map((p) => p.category).filter(Boolean) as string[])).sort();
+			const locations = Array.from(new Set(data.map((p) => p.lokasi).filter(Boolean) as string[])).sort();
+			return { categories, locations };
+		}
+	}
+	const list = seedPlaces.filter((p) => p.type === type);
+	const categories = Array.from(new Set(list.map((p) => p.category).filter(Boolean) as string[])).sort();
+	const locations = Array.from(new Set(list.map((p) => p.lokasi).filter(Boolean) as string[])).sort();
+	return { categories, locations };
+}
+
+export async function getArticles(opts: { limit?: number; page?: number; q?: string; tag?: string } = {}): Promise<{ articles: Article[]; hasMore: boolean }> {
+	const limit = opts.limit ?? 6;
+	const pageNum = opts.page ?? 0;
+	const from = pageNum * limit;
+	const to = from + limit - 1;
+
 	if (supabase) {
 		let query = supabase
 			.from('articles')
-			.select('id, title, slug, excerpt, cover_image, tags, published_at, created_at')
+			.select('id, title, slug, excerpt, cover_image, tags, published_at, created_at', { count: 'exact' })
 			.order('published_at', { ascending: false });
-		if (limit) query = query.limit(limit);
-		const { data, error } = await query;
-		if (!error && data) return data as Article[];
+		if (opts.q) query = query.ilike('title', `%${opts.q}%`);
+		if (opts.tag) query = query.contains('tags', [opts.tag]);
+		const { data, error, count } = await query.range(from, to);
+		if (!error && data) {
+			return { articles: data as Article[], hasMore: to < (count ?? 0) - 1 };
+		}
 	}
-	const list = [...seedArticles].sort((a, b) =>
+	let list = [...seedArticles].sort((a, b) =>
 		(b.published_at ?? '').localeCompare(a.published_at ?? '')
 	);
-	return limit ? list.slice(0, limit) : list;
+	if (opts.q) {
+		const q = opts.q.toLowerCase();
+		list = list.filter((a) => a.title.toLowerCase().includes(q) || a.excerpt?.toLowerCase().includes(q));
+	}
+	if (opts.tag) list = list.filter((a) => a.tags?.includes(opts.tag!));
+	const sliced = list.slice(from, to + 1);
+	return { articles: sliced, hasMore: to + 1 < list.length };
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {

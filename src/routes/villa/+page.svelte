@@ -28,7 +28,6 @@
 	let hasMore = $state(data.hasMore);
 	let page = $state(0);
 	let loading = $state(false);
-	let sentinel = $state<HTMLDivElement | null>(null);
 
 	$effect(() => {
 		places = data.places;
@@ -52,23 +51,26 @@
 		if (loading || !hasMore) return;
 		loading = true;
 		const nextPage = page + 1;
-		const res = await fetch(`/api/places?${buildParams(nextPage).toString()}`);
-		const json = await res.json();
-		places = [...places, ...json.places];
-		hasMore = json.hasMore;
-		page = nextPage;
-		loading = false;
+		try {
+			const res = await fetch(`/api/places?${buildParams(nextPage).toString()}`);
+			const json = await res.json();
+			places = [...places, ...json.places];
+			hasMore = json.hasMore;
+			page = nextPage;
+		} finally {
+			loading = false;
+		}
 	}
 
-	$effect(() => {
-		if (!sentinel) return;
+	// use: action — observer dibuat tepat saat elemen masuk DOM, destroy saat keluar
+	function sentinel(node: HTMLElement) {
 		const observer = new IntersectionObserver(
-			(entries) => { if (entries[0].isIntersecting) loadMore(); },
-			{ rootMargin: '300px' }
+			([entry]) => { if (entry.isIntersecting) loadMore(); },
+			{ rootMargin: '0px' }
 		);
-		observer.observe(sentinel);
-		return () => observer.disconnect();
-	});
+		observer.observe(node);
+		return { destroy: () => observer.disconnect() };
+	}
 
 	function apply() {
 		const params = new URLSearchParams();
@@ -185,7 +187,7 @@
 					{/each}
 				</div>
 
-				<div bind:this={sentinel} class="mt-8 flex justify-center">
+				<div use:sentinel class="mt-8 flex justify-center">
 					{#if loading}
 						<div class="flex items-center gap-2 text-sm text-ink/50">
 							<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">

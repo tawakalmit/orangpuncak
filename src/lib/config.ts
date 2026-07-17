@@ -22,3 +22,13 @@ export const SOCIAL_LINKS = [
 	// { label: 'TikTok', href: 'https://tiktok.com/@orangpuncak' },
 	// { label: 'YouTube', href: 'https://youtube.com/@orangpuncak' }
 ];
+
+export const LOKASI_OPTIONS = [
+	'Cisarua',
+	'Puncak Pass',
+	'Cipanas',
+	'Megamendung',
+	'Pacet',
+	'Sukaresmi',
+	'Puncak Dua'
+];
