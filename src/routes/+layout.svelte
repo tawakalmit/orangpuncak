@@ -24,13 +24,13 @@
 	});
 </script>
 
-{#if GA_MEASUREMENT_ID}
-	<svelte:head>
-		<!-- Google Analytics -->
+<!-- svelte:head harus di top level, tidak boleh di dalam {#if} -->
+<svelte:head>
+	{#if GA_MEASUREMENT_ID}
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');</script>`}
-	</svelte:head>
-{/if}
+	{/if}
+</svelte:head>
 
 {#if isAdmin}
 	{@render children()}
