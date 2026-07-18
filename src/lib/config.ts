@@ -4,6 +4,7 @@ export const SITE_NAME = 'orangpuncak.com';
 export const SITE_TAGLINE = 'Media & Direktori Wisata Kawasan Puncak';
 export const SITE_URL = env.PUBLIC_SITE_URL || 'https://orangpuncak.com';
 export const WHATSAPP_NUMBER = env.PUBLIC_WHATSAPP_NUMBER || '6281234567890';
+export const GA_MEASUREMENT_ID = env.PUBLIC_GA_MEASUREMENT_ID || '';
 
 /** Gambar Open Graph default (fallback) untuk halaman tanpa gambar khusus.
  *  Untuk kompatibilitas maksimal di Facebook/LinkedIn, ganti dengan PNG/JPG 1200x630. */
