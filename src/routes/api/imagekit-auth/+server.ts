@@ -25,7 +25,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 	}
 
 	const token = randomUUID();
-	const expire = Math.floor(Date.now() / 1000) + 3600; // valid 1 jam
+	// Expire 30 menit dari sekarang — cukup untuk upload, hindari clock skew
+	const expire = Math.floor(Date.now() / 1000) + 1800;
 	const signature = createHmac('sha1', privateKey)
 		.update(token + expire)
 		.digest('hex');

@@ -68,9 +68,20 @@ export function imgCover(url: string | null | undefined): string {
 }
 
 /**
+ * Dapatkan auth params dari server untuk satu kali upload.
+ */
+async function getAuthParams(): Promise<{ token: string; expire: number; signature: string }> {
+	const authRes = await fetch('/api/imagekit-auth');
+	if (!authRes.ok) {
+		throw new Error('Gagal mendapatkan parameter autentikasi upload.');
+	}
+	return authRes.json();
+}
+
+/**
  * Upload sebuah file ke ImageKit.
  * Alur:
- *   1. Fetch token/signature/expire dari server route /api/imagekit-auth
+ *   1. Fetch token/signature/expire dari server route /api/imagekit-auth (per file)
  *      (Private Key aman di server, tidak pernah ke browser).
  *   2. POST file langsung ke ImageKit API dari browser.
  * Mengembalikan url yang siap disimpan ke database.
@@ -82,14 +93,10 @@ export async function uploadToImageKit(file: File): Promise<ImageKitResult> {
 		);
 	}
 
-	// 1. Dapatkan auth params dari server
-	const authRes = await fetch('/api/imagekit-auth');
-	if (!authRes.ok) {
-		throw new Error('Gagal mendapatkan parameter autentikasi upload.');
-	}
-	const { token, expire, signature } = await authRes.json();
+	// Dapatkan auth params segar untuk setiap file
+	const { token, expire, signature } = await getAuthParams();
 
-	// 2. Upload langsung ke ImageKit dari browser
+	// Upload langsung ke ImageKit dari browser
 	const formData = new FormData();
 	formData.append('file', file);
 	formData.append('publicKey', IMAGEKIT_PUBLIC_KEY);
