@@ -31,6 +31,7 @@ export const GET: RequestHandler = async () => {
 		{ loc: '/villa', changefreq: 'daily', priority: '0.9' },
 		{ loc: '/kuliner', changefreq: 'daily', priority: '0.9' },
 		{ loc: '/artikel', changefreq: 'daily', priority: '0.8' },
+		{ loc: '/jadwal-one-way-puncak-hari-ini', changefreq: 'daily', priority: '0.8' },
 		{ loc: '/iklan', changefreq: 'monthly', priority: '0.7' },
 		{ loc: '/cara-booking', changefreq: 'monthly', priority: '0.5' },
 		{ loc: '/cara-survey', changefreq: 'monthly', priority: '0.5' },
