@@ -106,6 +106,21 @@
 	</div>
 </section>
 
+<!-- Banner Jadwal One Way -->
+<section class="mx-auto max-w-content py-8 2xl:px-0 w-11/12">
+	<a
+		href="/jadwal-one-way-puncak-hari-ini"
+		class="flex flex-col items-center justify-between gap-4 rounded-2xl border border-brand/20 bg-surface px-6 py-5 shadow-md transition hover:shadow-lg sm:flex-row"
+	>
+		<div>
+			<p class="text-xs font-semibold uppercase tracking-wide text-brand/70">Info Lalu Lintas</p>
+			<h2 class="mt-1 font-heading text-lg font-semibold text-brand md:text-xl">Jadwal One Way Puncak Hari Ini</h2>
+			<p class="mt-1 text-sm text-ink/60">Cek jadwal terbaru sebelum berangkat agar perjalanan lebih lancar.</p>
+		</div>
+		<span class="btn-primary shrink-0 whitespace-nowrap">Cek Jadwal</span>
+	</a>
+</section>
+
 <!-- Direktori: Wisata, Kuliner, Villa terbaru -->
 <section class="mx-auto max-w-content py-10 2xl:px-0 w-11/12">
 	<div class="flex items-end justify-between">
@@ -113,8 +128,10 @@
 		<a href="/wisata" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
 	</div>
 	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-		{#each data.latestWisata as place (place.id)}
-			<Card {place} />
+		{#each data.latestWisata as place, i (place.id)}
+			<div class={i >= 4 ? 'hidden md:block' : ''}>
+				<Card {place} />
+			</div>
 		{/each}
 	</div>
 </section>
@@ -125,8 +142,10 @@
 		<a href="/kuliner" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
 	</div>
 	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-		{#each data.latestKuliner as place (place.id)}
-			<Card {place} />
+		{#each data.latestKuliner as place, i (place.id)}
+			<div class={i >= 4 ? 'hidden md:block' : ''}>
+				<Card {place} />
+			</div>
 		{/each}
 	</div>
 </section>
@@ -137,8 +156,10 @@
 		<a href="/villa" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
 	</div>
 	<div class="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-		{#each data.latestVilla as place (place.id)}
-			<Card {place} />
+		{#each data.latestVilla as place, i (place.id)}
+			<div class={i >= 4 ? 'hidden md:block' : ''}>
+				<Card {place} />
+			</div>
 		{/each}
 	</div>
 </section>
