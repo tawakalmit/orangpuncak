@@ -19,8 +19,9 @@
 		formAction?: string;
 		allPlaces?: PlaceOption[];
 		allCategories?: string[];
+		allVillaComplexes?: string[];
 	}
-	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [], allCategories = [] }: Props = $props();
+	let { place = {}, error = null, submitLabel = 'Simpan', formAction = '', allPlaces = [], allCategories = [], allVillaComplexes = [] }: Props = $props();
 
 	let type = $state(place.type ?? 'wisata');
 	let status = $state(place.status ?? 'disewakan');
@@ -28,6 +29,7 @@
 	let gallery = $state<string[]>(place.gallery ?? []);
 	let saving = $state(false);
 	let categories = $state<string[]>(place.categories ?? []);
+	let villaComplexes = $state<string[]>((place as { villa_complexes?: string[] }).villa_complexes ?? []);
 
 	let nearbyVilla = $state<string[]>(place.nearby_villa_ids ?? []);
 	let nearbyWisata = $state<string[]>(place.nearby_wisata_ids ?? []);
@@ -221,6 +223,9 @@
 						<option value="disewakan">Disewakan</option>
 						<option value="dijual">Dijual</option>
 					</select>
+				</div>
+				<div class="md:col-span-2">
+					<CategoryPicker name="villa_complexes" label="Komplek Villa" options={allVillaComplexes} bind:selected={villaComplexes} />
 				</div>
 				<div><label class="mb-1 block text-sm font-medium" for="jumlah_kamar_tidur">Kamar Tidur</label><input id="jumlah_kamar_tidur" name="jumlah_kamar_tidur" type="number" value={place.jumlah_kamar_tidur ?? ''} class={inputClass} /></div>
 				<div><label class="mb-1 block text-sm font-medium" for="jumlah_kamar_mandi">Kamar Mandi</label><input id="jumlah_kamar_mandi" name="jumlah_kamar_mandi" type="number" value={place.jumlah_kamar_mandi ?? ''} class={inputClass} /></div>

@@ -82,6 +82,9 @@ export interface Place {
 	nearby_wisata_ids?: string[] | null;
 	nearby_kuliner_ids?: string[] | null;
 
+	// villa
+	villa_complexes?: string[] | null;
+
 	// wisata / kuliner
 	jam_buka?: string | null;
 	harga_tiket?: string | null;

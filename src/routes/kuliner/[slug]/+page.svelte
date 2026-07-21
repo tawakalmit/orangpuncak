@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
+	import ArticleCard from '$lib/components/ArticleCard.svelte';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Gallery from '$lib/components/Gallery.svelte';
 	import LazyMap from '$lib/components/LazyMap.svelte';
@@ -114,29 +115,45 @@
 
 	{#if data.nearbyVilla.length}
 		<section class="mt-12">
-			<h2 class="section-title">Villa Terdekat</h2>
+			<div class="flex items-center justify-between">
+				<h2 class="section-title">Villa Terdekat</h2>
+				<a href="/villa" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+			</div>
 			<div class="mt-4"><Carousel places={data.nearbyVilla} /></div>
 		</section>
 	{/if}
 
 	{#if data.nearbyWisata.length}
 		<section class="mt-12">
-			<h2 class="section-title">Wisata Terdekat</h2>
+			<div class="flex items-center justify-between">
+				<h2 class="section-title">Wisata Terdekat</h2>
+				<a href="/wisata" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+			</div>
 			<div class="mt-4"><Carousel places={data.nearbyWisata} /></div>
 		</section>
 	{/if}
 
 	{#if data.nearbyKuliner.length}
 		<section class="mt-12">
-			<h2 class="section-title">Kuliner Terdekat</h2>
+			<div class="flex items-center justify-between">
+				<h2 class="section-title">Kuliner Terdekat</h2>
+				<a href="/kuliner" class="text-sm font-medium text-brand hover:underline">Lihat semua →</a>
+			</div>
 			<div class="mt-4"><Carousel places={data.nearbyKuliner} /></div>
 		</section>
 	{/if}
 
-	{#if data.related.length}
+	{#if data.articles.length}
 		<section class="mt-12">
-			<h2 class="section-title">Kuliner Lainnya</h2>
-			<div class="mt-4"><Carousel places={data.related} /></div>
+			<h2 class="section-title">Artikel Terkait</h2>
+			<div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{#each data.articles as article (article.id)}
+					<ArticleCard {article} />
+				{/each}
+			</div>
+			<div class="mt-4 text-right">
+				<a href="/artikel" class="text-sm font-medium text-brand hover:underline">Lihat semua artikel →</a>
+			</div>
 		</section>
 	{/if}
 </div>

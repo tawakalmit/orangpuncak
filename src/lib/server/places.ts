@@ -94,7 +94,10 @@ export function parsePlaceForm(form: FormData) {
 		tips: str(form.get('tips')),
 		nearby_villa_ids: form.getAll('nearby_villa_ids').map((v) => String(v)).filter(Boolean),
 		nearby_wisata_ids: form.getAll('nearby_wisata_ids').map((v) => String(v)).filter(Boolean),
-		nearby_kuliner_ids: form.getAll('nearby_kuliner_ids').map((v) => String(v)).filter(Boolean)
+		nearby_kuliner_ids: form.getAll('nearby_kuliner_ids').map((v) => String(v)).filter(Boolean),
+		villa_complexes: type === 'villa'
+			? form.getAll('villa_complexes').map((v) => String(v)).filter(Boolean)
+			: null
 	};
 
 	if (type === 'villa') {

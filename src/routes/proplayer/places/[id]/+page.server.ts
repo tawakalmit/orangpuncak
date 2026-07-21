@@ -11,14 +11,16 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.maybeSingle();
 	if (err || !data) throw error(404, 'Data tidak ditemukan');
 
-	const [{ data: allPlacesData }, { data: cats }] = await Promise.all([
+	const [{ data: allPlacesData }, { data: cats }, { data: complexes }] = await Promise.all([
 		locals.supabase.from('places').select('id, name, type').neq('id', params.id).order('name', { ascending: true }),
-		locals.supabase.from('places').select('categories').not('categories', 'is', null)
+		locals.supabase.from('places').select('categories').not('categories', 'is', null),
+		locals.supabase.from('places').select('villa_complexes').eq('type', 'villa').not('villa_complexes', 'is', null)
 	]);
 
 	const allCategories = [...new Set((cats ?? []).flatMap((r) => r.categories ?? []).filter(Boolean))].sort() as string[];
+	const allVillaComplexes = [...new Set((complexes ?? []).flatMap((r: { villa_complexes?: string[] | null }) => r.villa_complexes ?? []).filter(Boolean))].sort() as string[];
 
-	return { place: data, allPlaces: allPlacesData ?? [], allCategories };
+	return { place: data, allPlaces: allPlacesData ?? [], allCategories, allVillaComplexes };
 };
 
 export const actions: Actions = {
