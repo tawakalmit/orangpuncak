@@ -56,8 +56,8 @@
 </script>
 
 <Seo
-	title="Media & Direktori Wisata Puncak"
-	description="orangpuncak.com - direktori villa, tempat wisata, kuliner, dan tips perjalanan kawasan Puncak Bogor & Cianjur."
+	title="Orang Puncak: Direktori Wisata & Kuliner"
+	description="Cari rekomendasi villa, wisata, dan kuliner di Puncak Bogor & Cianjur? Temukan panduan liburan terlengkap langsung dari orang puncak di orangpuncak.com."
 	image={data.featured[0]?.cover_image}
 	{jsonLd}
 />

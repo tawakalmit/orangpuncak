@@ -1,0 +1,44 @@
+# orangpuncak.com
+
+> Media dan direktori wisata kawasan Puncak (Bogor & Cianjur, Jawa Barat, Indonesia). Memuat informasi tempat wisata, villa & penginapan, kuliner, artikel perjalanan, dan tips wisata. Fokus membantu wisatawan merencanakan dan memesan perjalanan ke kawasan Puncak.
+
+## Tentang Situs
+
+orangpuncak.com adalah platform direktori dan media wisata yang menyajikan informasi lengkap tentang destinasi, akomodasi, dan kuliner di kawasan Puncak — meliputi wilayah Cisarua, Megamendung, Puncak Pass, Cipanas, dan sekitarnya.
+
+## Konten Utama
+
+- **Wisata** — daftar dan detail tempat wisata di kawasan Puncak: taman, air terjun, agrowisata, wahana, dan lainnya. Mencakup info lokasi, tips kunjungan, galeri foto, dan peta.
+- **Villa & Penginapan** — direktori villa dan penginapan dengan filter lokasi, jumlah kamar, dan fasilitas. Detail mencakup harga sewa (weekday/weekend), fasilitas lengkap, spesifikasi, galeri, video, dan tombol reservasi via WhatsApp.
+- **Kuliner** — rekomendasi restoran, kafe, dan warung makan di kawasan Puncak beserta info menu, lokasi, dan peta.
+- **Artikel** — konten editorial seputar wisata Puncak: panduan perjalanan, event, tips, dan informasi terkini.
+- **Pasang Iklan** — informasi paket kerjasama dan form pengajuan bagi pelaku usaha wisata di kawasan Puncak.
+
+## Cara Menggunakan
+
+- Cara pemesanan villa atau wisata tersedia di `/cara-booking`
+- Cara survey lokasi tersedia di `/cara-survey`
+- Semua halaman tersedia dalam Bahasa Indonesia
+- Reservasi dan konsultasi dilayani via WhatsApp
+
+## Halaman Penting
+
+- `/` — Beranda
+- `/wisata` — Daftar tempat wisata
+- `/villa` — Daftar villa & penginapan
+- `/kuliner` — Daftar kuliner
+- `/artikel` — Daftar artikel wisata
+- `/iklan` — Pasang iklan / kerjasama
+- `/cara-booking` — Panduan pemesanan
+- `/cara-survey` — Panduan survey lokasi
+- `/tentang` — Tentang kami
+- `/kontak` — Kontak
+- `/sitemap.xml` — Sitemap lengkap
+
+## Informasi Teknis
+
+- Bahasa: Indonesia (id-ID)
+- Wilayah: Puncak, Bogor & Cianjur, Jawa Barat, Indonesia
+- Format data: HTML dengan schema.org JSON-LD (LodgingBusiness, TouristAttraction, Restaurant, Article, BreadcrumbList)
+- Sitemap: https://orangpuncak.com/sitemap.xml
+- Robots: https://orangpuncak.com/robots.txt
