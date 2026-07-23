@@ -10,7 +10,8 @@
 		{ href: '/proplayer', label: 'Dashboard' },
 		{ href: '/proplayer/places', label: 'Direktori' },
 		{ href: '/proplayer/articles', label: 'Artikel' },
-		{ href: '/proplayer/leads', label: 'Leads Iklan' }
+		{ href: '/proplayer/leads', label: 'Leads Iklan' },
+		{ href: '/proplayer/messages', label: 'Pesan Masuk' }
 	];
 
 	const isActive = (href: string) =>
