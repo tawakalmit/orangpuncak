@@ -79,7 +79,7 @@
 		{/if}
 	</div>
 
-	<div class="mt-6">
+	<!-- <div class="mt-6">
 		<a
 			href={waLink(itemWaMessage('kuliner', p.name, p.kode), p.whatsapp ?? undefined)}
 			target="_blank"
@@ -88,11 +88,11 @@
 		>
 			Reservasi / Tanya via WhatsApp
 		</a>
-	</div>
+	</div> -->
 
 	{#if p.description || p.content}
 		<section class="mt-8">
-			<h2 class="section-title">Tentang {p.name}</h2>
+			<!-- <h2 class="section-title">Tentang {p.name}</h2> -->
 			<div class="prose mt-3 max-w-none text-ink/80 konten-body">
 				{#if p.content}{@html p.content}{:else}<p>{p.description}</p>{/if}
 			</div>
