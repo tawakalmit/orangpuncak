@@ -49,27 +49,78 @@ export function ikTransform(url: string | null | undefined, transform: string): 
 	return `${base}/tr:${transform}${path}`;
 }
 
+/**
+ * Terapkan transformasi Cloudinary ke URL.
+ * Format asli: https://res.cloudinary.com/{cloud}/image/upload/v{ts}/{path}
+ * Format target: https://res.cloudinary.com/{cloud}/image/upload/{transforms}/v{ts}/{path}
+ *
+ * Jika sudah ada transforms setelah /upload/ (bukan versi), ganti seluruhnya.
+ * Jika tidak ada transforms, sisipkan sebelum versi atau langsung setelah /upload/.
+ */
+export function cloudinaryTransform(url: string | null | undefined, transforms: string): string {
+	if (!url) return '';
+	if (!url.includes('res.cloudinary.com')) return url;
+	// Sudah punya transform yang sama — skip
+	if (url.includes(`/upload/${transforms}/`)) return url;
+
+	// Pisah URL menjadi bagian sebelum /upload/ dan setelahnya
+	const uploadIdx = url.indexOf('/upload/');
+	if (uploadIdx === -1) return url;
+
+	const before = url.slice(0, uploadIdx + '/upload/'.length); // ...com/image/upload/
+	const after = url.slice(uploadIdx + '/upload/'.length);     // [existing_transforms/]v123/path atau path
+
+	// Kalau setelah /upload/ ada transform existing (bukan versi, bukan path langsung),
+	// ganti dengan transform baru. Deteksi: ada koma atau underscore sebelum slash pertama
+	// dan tidak diawali 'v' diikuti angka
+	const firstSegment = after.split('/')[0];
+	const isVersionSegment = /^v\d+$/.test(firstSegment);
+	const isTransformSegment = !isVersionSegment && (firstSegment.includes('_') || firstSegment.includes(','));
+
+	if (isTransformSegment) {
+		// Ganti transform lama
+		const rest = after.slice(firstSegment.length + 1);
+		return `${before}${transforms}/${rest}`;
+	}
+
+	// Tidak ada transform — sisipkan langsung
+	return `${before}${transforms}/${after}`;
+}
+
 /** Thumbnail untuk kartu/grid/daftar (rasio 4:3). */
 export function imgThumb(url: string | null | undefined): string {
 	if (!url) return PLACEHOLDER_IMAGE;
+	if (url.includes('res.cloudinary.com')) {
+		// w_600,h_450,c_fill,f_auto,q_auto:eco
+		return cloudinaryTransform(url, 'w_600,h_450,c_fill,f_auto,q_auto:eco');
+	}
 	return ikTransform(url, 'c-at_max,w-600,h-450,fo-auto,q-80,f-auto');
 }
 
 /** Thumbnail kecil (strip galeri). */
 export function imgThumbSm(url: string | null | undefined): string {
 	if (!url) return PLACEHOLDER_IMAGE;
+	if (url.includes('res.cloudinary.com')) {
+		return cloudinaryTransform(url, 'w_500,h_375,c_fill,f_auto,q_auto:eco');
+	}
 	return ikTransform(url, 'c-at_max,w-500,h-375,fo-auto,q-80,f-auto');
 }
 
 /** Gambar besar teroptimasi (banner/cover) tanpa crop paksa. */
 export function imgCover(url: string | null | undefined): string {
 	if (!url) return PLACEHOLDER_IMAGE;
+	if (url.includes('res.cloudinary.com')) {
+		return cloudinaryTransform(url, 'w_1600,f_auto,q_auto:good');
+	}
 	return ikTransform(url, 'w-1600,q-80,f-auto');
 }
 
 /** Gambar hero detail page — lebih kecil dari cover, cukup untuk ~800px wide column. */
 export function imgHero(url: string | null | undefined): string {
 	if (!url) return PLACEHOLDER_IMAGE;
+	if (url.includes('res.cloudinary.com')) {
+		return cloudinaryTransform(url, 'w_900,f_auto,q_auto:good');
+	}
 	return ikTransform(url, 'w-900,q-82,f-auto');
 }
 
