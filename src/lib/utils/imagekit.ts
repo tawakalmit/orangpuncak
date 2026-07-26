@@ -67,6 +67,12 @@ export function imgCover(url: string | null | undefined): string {
 	return ikTransform(url, 'w-1600,q-80,f-auto');
 }
 
+/** Gambar hero detail page — lebih kecil dari cover, cukup untuk ~800px wide column. */
+export function imgHero(url: string | null | undefined): string {
+	if (!url) return PLACEHOLDER_IMAGE;
+	return ikTransform(url, 'w-900,q-82,f-auto');
+}
+
 /**
  * Dapatkan auth params dari server untuk satu kali upload.
  */

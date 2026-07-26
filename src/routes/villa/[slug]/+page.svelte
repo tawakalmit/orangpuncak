@@ -7,9 +7,10 @@
 	import { SITE_URL } from '$lib/config';
 	import type { VillaFacilities } from '$lib/types';
 	import { formatRupiah, youtubeEmbed } from '$lib/utils/format';
-	import { imgCover, imgThumb } from '$lib/utils/imagekit';
+	import { imgHero, imgThumb } from '$lib/utils/imagekit';
 	import { villaWaMessage, waLink, type WaAction } from '$lib/utils/whatsapp';
 	import { villaFaqJsonLd } from '$lib/utils/faqJsonLd';
+	import { untrack } from 'svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -46,8 +47,8 @@
 
 	// Hero: foto utama interaktif dengan thumbnail strip
 	const allPhotos = $derived([p.cover_image, ...(p.gallery ?? [])].filter(Boolean) as string[]);
-	let activePhoto = $state('');
-	$effect(() => { activePhoto = p.cover_image ?? ''; });
+	// untrack agar tidak trigger reactive warning — nilai init stabil dari SSR
+	let activePhoto = $state(untrack(() => data.place.cover_image ?? ''));
 	const bannerKompleks = $derived((p as typeof p & { villa_complexes?: string[] }).villa_complexes);
 
 	// Fasilitas highlight untuk info panel (prioritas tampil di panel)
@@ -92,6 +93,12 @@
 
 <Seo title={`${p.name} (${p.kode})`} description={p.description ?? ''} image={p.cover_image} path={`/villa/${p.slug}`} {jsonLd} />
 
+<svelte:head>
+	{#if data.place.cover_image}
+		<link rel="preload" as="image" href={imgHero(data.place.cover_image)} fetchpriority="high" />
+	{/if}
+</svelte:head>
+
 <!-- HERO: Breadcrumb + Mosaic Grid + Info Panel -->
 <div class="mx-auto max-w-content 2xl:px-0 lg:w-full">
 	<Breadcrumb
@@ -112,7 +119,7 @@
 			<!-- Foto utama -->
 			<div class="relative min-h-[240px] flex-1 overflow-hidden rounded-2xl shadow-lg">
 				<img
-					src={imgCover(activePhoto)}
+					src={imgHero(activePhoto)}
 					alt={`Foto villa ${p.name}`}
 					class="h-full w-full object-cover"
 					fetchpriority="high"
