@@ -193,9 +193,9 @@ export async function getVillaByKode(kode: string): Promise<Place | null> {
 	return seedPlaces.find((p) => p.type === 'villa' && p.kode === kode) ?? null;
 }
 
-export async function getRelatedVillas(kode: string, limit = 8): Promise<Place[]> {
+export async function getRelatedVillas(slug: string, limit = 8): Promise<Place[]> {
 	const all = await getVillas();
-	return all.filter((p) => p.kode !== kode).slice(0, limit);
+	return all.filter((p) => p.slug !== slug).slice(0, limit);
 }
 
 export async function getRelated(type: PlaceType, slug: string, limit = 8): Promise<Place[]> {

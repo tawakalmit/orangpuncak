@@ -14,7 +14,7 @@
 		image: p.cover_image ?? '',
 		title: p.name,
 		subtitle: p.lokasi ? `${p.type === 'villa' ? 'Villa' : 'Wisata'} · ${p.lokasi}` : undefined,
-		href: p.type === 'villa' ? `/villa/${p.kode}` : `/${p.type}/${p.slug}`
+		href: `/${p.type}/${p.slug}`
 	}));
 
 	const langkahBooking = [

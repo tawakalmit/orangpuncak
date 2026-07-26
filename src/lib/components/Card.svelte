@@ -8,9 +8,7 @@
 	}
 	let { place }: Props = $props();
 
-	const href = $derived(
-		place.type === 'villa' ? `/villa/${place.kode}` : `/${place.type}/${place.slug}`
-	);
+	const href = $derived(`/${place.type}/${place.slug}`);
 
 	const statusLabel = $derived(
 		place.status === 'dijual' ? 'Dijual' : place.status === 'disewakan' ? 'Disewakan' : null

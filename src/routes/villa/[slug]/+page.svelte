@@ -2,7 +2,6 @@
 	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import ArticleCard from '$lib/components/ArticleCard.svelte';
 	import Carousel from '$lib/components/Carousel.svelte';
-	import Gallery from '$lib/components/Gallery.svelte';
 	import LazyMap from '$lib/components/LazyMap.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import { SITE_URL } from '$lib/config';
@@ -45,9 +44,26 @@
 
 	const embedVideo = $derived(youtubeEmbed(p.video));
 
-	const bannerThumbnails = $derived((p.gallery ?? []).slice(0, 4));
-	const hasBannerThumb = $derived(bannerThumbnails.length >= 2);
+	// Hero: foto utama interaktif dengan thumbnail strip
+	const allPhotos = $derived([p.cover_image, ...(p.gallery ?? [])].filter(Boolean) as string[]);
+	let activePhoto = $state('');
+	$effect(() => { activePhoto = p.cover_image ?? ''; });
 	const bannerKompleks = $derived((p as typeof p & { villa_complexes?: string[] }).villa_complexes);
+
+	// Fasilitas highlight untuk info panel (prioritas tampil di panel)
+	const highlightFacilityKeys: (keyof VillaFacilities)[] = [
+		'kolam_renang', 'wifi', 'ac', 'billiard', 'karaoke', 'barbeque', 'smart_tv', 'gazebo'
+	];
+	const heroFacilities = $derived(
+		highlightFacilityKeys
+			.filter((k) => p.facilities?.[k])
+			.map((k) => facilityLabels.find((f) => f.key === k)!)
+			.filter(Boolean)
+			.slice(0, 6)
+	);
+
+	// Harga ringkas untuk panel (unused — harga ditampilkan langsung di template)
+	// const hargaDisplay = ...
 
 	const langkahBooking = [
 		{ n: 1, t: 'Pilih & Hubungi', d: 'Pilih villa favorit, klik tombol WhatsApp.' },
@@ -64,7 +80,7 @@
 			description: p.description,
 			image: p.cover_image,
 			address: p.address,
-			url: `${SITE_URL}/villa/${p.kode}`
+			url: `${SITE_URL}/villa/${p.slug}`
 		},
 		...(villaFaqJsonLd(p) ? [villaFaqJsonLd(p)!] : [])
 	]);
@@ -74,47 +90,34 @@
 	}
 </script>
 
-<Seo title={`${p.name} (${p.kode})`} description={p.description ?? ''} image={p.cover_image} path={`/villa/${p.kode}`} {jsonLd} />
+<Seo title={`${p.name} (${p.kode})`} description={p.description ?? ''} image={p.cover_image} path={`/villa/${p.slug}`} {jsonLd} />
 
-<!-- 1. Banner -->
-<div class="w-full bg-ink/5">
-	<div class="mx-auto max-w-content px-4 py-4 2xl:px-0 lg:w-full">
-		<a
-			href={p.gallery?.length ? '#galeri' : undefined}
-			class="block"
-			class:cursor-pointer={p.gallery?.length}
-			class:cursor-default={!p.gallery?.length}
-			aria-label={p.gallery?.length ? 'Lihat galeri foto' : undefined}
-			onclick={(e) => {
-				if (!p.gallery?.length) return;
-				e.preventDefault();
-				document.getElementById('galeri')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			}}
-		>
-		<div
-			class="overflow-hidden rounded-2xl shadow-lg"
-			class:group={p.gallery?.length}
-			class:grid={hasBannerThumb}
-			class:md:grid-cols-[1fr_200px]={hasBannerThumb}
-			style={hasBannerThumb ? 'gap: 3px;' : ''}
-		>
+<!-- HERO: Breadcrumb + Mosaic Grid + Info Panel -->
+<div class="mx-auto max-w-content 2xl:px-0 lg:w-full">
+	<Breadcrumb
+		items={[
+			{ label: 'Beranda', href: '/' },
+			{ label: 'Semua Villa', href: '/villa' },
+			{ label: p.name }
+		]}
+	/>
+</div>
+
+<div class="mx-auto max-w-content px-4 pb-0 pt-3 2xl:px-0 lg:w-full">
+	<!-- Layout: grid foto kiri + panel info kanan di lg ke atas -->
+	<div class="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:h-[70dvh]">
+
+		<!-- KIRI: Foto utama + thumbnail strip -->
+		<div class="lg:flex-1 lg:self-stretch flex flex-col gap-2">
 			<!-- Foto utama -->
-			<div class="relative aspect-[4/3] w-full overflow-hidden md:aspect-[16/9]">
+			<div class="relative min-h-[240px] flex-1 overflow-hidden rounded-2xl shadow-lg">
 				<img
-					src={imgCover(p.cover_image)}
+					src={imgCover(activePhoto)}
 					alt={`Foto villa ${p.name}`}
 					class="h-full w-full object-cover"
 					fetchpriority="high"
 					loading="eager"
 				/>
-				<!-- Gradient overlay + nama villa -->
-				<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 md:p-6">
-					<h1 class="font-heading text-xl font-bold text-white drop-shadow md:text-3xl">{p.name}</h1>
-					<p class="mt-1 text-sm text-white/80 drop-shadow">
-						{p.kode}{bannerKompleks?.length ? ` · ${bannerKompleks.join(', ')}` : ''}{p.status ? ` · ` : ''}
-						{#if p.status}<span class="capitalize">{p.status}</span>{/if}
-					</p>
-				</div>
 				{#if p.is_promo}
 					<span class="absolute left-3 top-3 rounded-xl bg-accent px-3 py-1.5 text-sm font-bold text-ink shadow">
 						Promo
@@ -122,90 +125,196 @@
 				{/if}
 			</div>
 
-			<!-- Thumbnail strip (hanya tampil di md ke atas, kalau ada ≥2 foto) -->
-			{#if hasBannerThumb}
-				<div class="hidden md:flex md:flex-col" style="gap: 3px;">
-					{#each bannerThumbnails as img, i}
-						<div class="relative flex-1 overflow-hidden" style="min-height: 0;">
+			<!-- Thumbnail strip (hanya kalau ada lebih dari 1 foto) -->
+			{#if allPhotos.length > 1}
+				<div class="flex gap-2 overflow-x-auto pb-1" style="scrollbar-width: thin;">
+					{#each allPhotos as img}
+						<button
+							type="button"
+							onclick={() => activePhoto = img}
+							class="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl transition
+								{activePhoto === img ? 'ring-2 ring-brand ring-offset-1' : 'opacity-70 hover:opacity-100'}"
+							aria-label="Lihat foto ini"
+						>
 							<img
 								src={imgThumb(img)}
-								alt={`Foto villa ${p.name} ${i + 2}`}
-								class="h-full w-full object-cover transition-opacity hover:opacity-90"
+								alt={`Foto villa ${p.name}`}
+								class="h-full w-full object-cover"
 								loading="lazy"
 							/>
-							{#if i === bannerThumbnails.length - 1 && (p.gallery?.length ?? 0) > 4}
-								<div class="absolute inset-0 flex items-center justify-center bg-black/50">
-									<span class="text-sm font-semibold text-white">+{(p.gallery?.length ?? 0) - 4} foto</span>
-								</div>
-							{/if}
-						</div>
+						</button>
 					{/each}
 				</div>
 			{/if}
 		</div>
-		</a>
-	</div>
-</div>
-<Breadcrumb
-	items={[
-		{ label: 'Beranda', href: '/' },
-		{ label: 'Semua Villa', href: '/villa' },
-		{ label: p.kode }
-	]}
-/>
 
-<div class="mx-auto max-w-content px-4 py-8 2xl:px-0 lg:w-11/12">
-	<!-- 3. Info & Aksi -->
-	<section class="rounded-xl bg-surface p-5 shadow-md">
-		<div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-			<div class="space-y-3">
-				{#if (p as typeof p & { villa_complexes?: string[] }).villa_complexes?.length}
-					<div>
-						<span class="text-xs font-semibold uppercase tracking-wide text-ink/50">Komplek Villa</span>
-						<div class="mt-1.5 flex flex-wrap gap-1.5">
-							{#each (p as typeof p & { villa_complexes?: string[] }).villa_complexes ?? [] as komplek}
-								<span class="rounded-full bg-brand/10 px-3 py-1 text-sm font-medium text-brand">{komplek}</span>
+		<!-- KANAN: Info panel -->
+		<div class="lg:w-80 xl:w-96">
+			<div class="h-full rounded-2xl border border-ink/10 bg-surface p-5 shadow-xl">
+
+				<!-- Badge & judul -->
+				<div class="flex flex-wrap items-start gap-2">
+					{#if p.status}
+						<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize
+							{p.status === 'disewakan' ? 'bg-brand/10 text-brand' : 'bg-amber-100 text-amber-700'}">
+							{p.status}
+						</span>
+					{/if}
+					{#if p.is_promo}
+						<span class="rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-ink">Promo</span>
+					{/if}
+				</div>
+				<h1 class="mt-2 font-heading text-xl font-bold leading-snug text-ink">{p.name}</h1>
+
+				<!-- Meta info -->
+				<div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/60">
+					{#if p.lokasi}
+						<span class="flex items-center gap-1">
+							<svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+								<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+							</svg>
+							{p.lokasi}
+						</span>
+					{/if}
+					{#if p.kode}<span class="text-ink/40">·</span><span>{p.kode}</span>{/if}
+				</div>
+
+				<!-- Spesifikasi singkat -->
+				{#if p.jumlah_kamar_tidur || p.kapasitas || p.jumlah_lantai}
+					<div class="mt-3 flex flex-wrap gap-3 border-t border-ink/10 pt-3">
+						{#if p.jumlah_kamar_tidur}
+							<div class="flex items-center gap-1.5 text-sm">
+								<svg class="h-4 w-4 text-brand/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+								</svg>
+								<span><strong>{p.jumlah_kamar_tidur}</strong> kamar tidur</span>
+							</div>
+						{/if}
+						{#if p.kapasitas}
+							<div class="flex items-center gap-1.5 text-sm">
+								<svg class="h-4 w-4 text-brand/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+								</svg>
+								<span>maks. <strong>{p.kapasitas}</strong> orang</span>
+							</div>
+						{/if}
+					</div>
+				{/if}
+
+				<!-- Fasilitas highlight -->
+				{#if heroFacilities.length}
+					<div class="mt-3 flex flex-wrap gap-1.5">
+						{#each heroFacilities as f}
+							<span class="rounded-full bg-brand/8 border border-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand">
+								{f.label}
+							</span>
+						{/each}
+					</div>
+				{/if}
+
+				<!-- Harga -->
+				{#if p.status === 'disewakan'}
+					<div class="mt-4 border-t border-ink/10 pt-4">
+						<div class="text-xs text-ink/50">Mulai dari</div>
+						{#if p.is_promo && p.promo_harga_sewa_weekday}
+							<div class="text-sm text-ink/40 line-through">{formatRupiah(p.harga_sewa_weekday)}</div>
+							<div class="text-2xl font-bold text-brand">{formatRupiah(p.promo_harga_sewa_weekday)}<span class="text-sm font-normal text-ink/60"> / malam</span></div>
+						{:else if p.harga_sewa_weekday}
+							<div class="text-2xl font-bold text-brand">{formatRupiah(p.harga_sewa_weekday)}<span class="text-sm font-normal text-ink/60"> / malam</span></div>
+						{/if}
+					</div>
+				{:else if p.status === 'dijual'}
+					<div class="mt-4 border-t border-ink/10 pt-4">
+						<div class="text-xs text-ink/50">Harga Jual</div>
+						{#if p.is_promo && p.harga_promo}
+							<div class="text-sm text-ink/40 line-through">{formatRupiah(p.harga_jual)}</div>
+							<div class="text-2xl font-bold text-brand">{formatRupiah(p.harga_promo)}</div>
+						{:else if p.harga_jual}
+							<div class="text-2xl font-bold text-brand">{formatRupiah(p.harga_jual)}</div>
+						{/if}
+					</div>
+				{/if}
+
+				<!-- CTA buttons -->
+				<div class="mt-4 flex flex-col gap-2">
+					{#each actions as action}
+						<a
+							href={waLink(villaWaMessage(action, p.kode, p.name), p.whatsapp ?? undefined)}
+							target="_blank"
+							rel="noopener"
+							class={action === actions[0]
+								? 'flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand/90'
+								: 'flex items-center justify-center gap-2 rounded-xl border border-brand/30 px-4 py-2.5 text-sm font-semibold text-brand transition hover:bg-brand/5'}
+						>
+							<svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+								<path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.561 4.14 1.535 5.873L0 24l6.322-1.507A11.952 11.952 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.797 9.797 0 0 1-5.028-1.383l-.361-.214-3.741.893.945-3.627-.236-.374A9.793 9.793 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/>
+							</svg>
+							{action}
+						</a>
+					{/each}
+					{#if p.gmaps_url}
+						<a
+							href={p.gmaps_url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center justify-center gap-1.5 rounded-xl border border-ink/15 px-4 py-2.5 text-sm font-medium text-ink/70 transition hover:bg-ink/5"
+						>
+							<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+								<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+							</svg>
+							Lihat di Google Maps
+						</a>
+					{/if}
+				</div>
+
+				<!-- Komplek villa (bila ada) -->
+				{#if bannerKompleks?.length}
+					<div class="mt-3 border-t border-ink/10 pt-3">
+						<span class="text-xs text-ink/50">Komplek Villa</span>
+						<div class="mt-1 flex flex-wrap gap-1">
+							{#each bannerKompleks as k}
+								<span class="rounded-full bg-ink/5 px-2.5 py-0.5 text-xs text-ink/70">{k}</span>
 							{/each}
 						</div>
 					</div>
 				{/if}
-				<div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-ink/70">
-					{#if p.lokasi}<span><span class="font-medium text-ink">Lokasi:</span> {p.lokasi}</span>{/if}
-					{#if p.status}<span><span class="font-medium text-ink">Status:</span> <span class="capitalize">{p.status}</span></span>{/if}
-					{#if p.kode}<span><span class="font-medium text-ink">Kode:</span> {p.kode}</span>{/if}
-				</div>
-			</div>
-			<div class="flex flex-wrap gap-2">
-				{#each actions as action}
-					<a
-						href={waLink(villaWaMessage(action, p.kode, p.name), p.whatsapp ?? undefined)}
-						target="_blank"
-						rel="noopener"
-						class="btn-action"
-					>
-						{action}
-					</a>
-				{/each}
-				{#if p.gmaps_url}
-					<a
-						href={p.gmaps_url}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-1.5 rounded-xl border border-brand/30 px-4 py-2.5 text-sm font-semibold text-brand transition hover:bg-brand/5"
-					>
-						<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-							<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-						</svg>
-						Buka GMaps
-					</a>
-				{/if}
+
 			</div>
 		</div>
-	</section>
+	</div>
+</div>
 
+<!-- Sticky action bar — muncul di mobile saat scroll -->
+<div class="fixed bottom-0 left-0 right-0 z-40 border-t border-ink/10 bg-surface/95 px-4 py-3 backdrop-blur-sm lg:hidden">
+	<div class="flex items-center gap-2">
+		<div class="min-w-0 flex-1">
+			<div class="truncate text-sm font-semibold">{p.name}</div>
+			{#if p.status === 'disewakan' && p.harga_sewa_weekday}
+				<div class="text-xs text-brand font-medium">
+					{formatRupiah(p.is_promo && p.promo_harga_sewa_weekday ? p.promo_harga_sewa_weekday : p.harga_sewa_weekday)} / malam
+				</div>
+			{:else if p.status === 'dijual' && p.harga_jual}
+				<div class="text-xs text-brand font-medium">{formatRupiah(p.is_promo && p.harga_promo ? p.harga_promo : p.harga_jual)}</div>
+			{/if}
+		</div>
+		<a
+			href={waLink(villaWaMessage(actions[0], p.kode, p.name), p.whatsapp ?? undefined)}
+			target="_blank"
+			rel="noopener"
+			class="shrink-0 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-brand/90"
+		>
+			{actions[0]} via WA
+		</a>
+	</div>
+</div>
+
+
+<div class="mx-auto max-w-content px-4 py-8 pb-20 2xl:px-0 lg:w-11/12 lg:pb-8">
 	<!-- 4. Harga -->
-	<section class="mt-8 rounded-xl bg-surface p-5 shadow-md">
+	<section class="rounded-xl bg-surface p-5 shadow-md">
 		<h2 class="font-heading text-lg font-semibold text-brand">Harga</h2>
 		{#if p.status === 'disewakan'}
 			<div class="mt-3 grid gap-4 sm:grid-cols-2">
@@ -285,16 +394,7 @@
 		</section>
 	{/if}
 
-	<!-- 6. Gallery -->
-	{#if p.gallery && p.gallery.length}
-		<section id="galeri" class="mt-8">
-			<h2 class="section-title">Galeri Villa</h2>
-			<div class="mt-4"><Gallery images={p.gallery} alt={`Foto villa ${p.name}`} /></div>
-		</section>
-	{/if}
-
-	<!-- Cara Booking -->
-	<section class="mt-12 rounded-2xl bg-muted px-6 py-10">
+	<!-- Cara Booking -->	<section class="mt-12 rounded-2xl bg-muted px-6 py-10">
 		<h2 class="section-title text-center">Cara Booking / Reservasi</h2>
 		<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 			{#each langkahBooking as step}
