@@ -115,7 +115,7 @@
 	<div class="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:h-[70dvh]">
 
 		<!-- KIRI: Foto utama + thumbnail strip -->
-		<div class="lg:flex-1 lg:self-stretch flex flex-col gap-2">
+		<div class="lg:flex-1 lg:self-stretch flex flex-col gap-2 w-full lg:w-[50%]">
 			<!-- Foto utama -->
 			<div class="relative min-h-[240px] flex-1 overflow-hidden rounded-2xl shadow-lg">
 				<img
