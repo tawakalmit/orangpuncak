@@ -91,7 +91,7 @@
 	}
 </script>
 
-<Seo title={`${p.name} (${p.kode})`} description={p.description ?? ''} image={p.cover_image} path={`/villa/${p.slug}`} {jsonLd} />
+<Seo title={p.meta_title ?? `${p.name} (${p.kode})`} description={p.description ?? ''} image={p.cover_image} path={`/villa/${p.slug}`} {jsonLd} />
 
 <svelte:head>
 	{#if data.place.cover_image}
