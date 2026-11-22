@@ -29,7 +29,7 @@
 	]);
 </script>
 
-<Seo title={p.name} description={p.description ?? ''} image={p.cover_image} path={`/kuliner/${p.slug}`} {jsonLd} />
+<Seo title={p.meta_title ?? p.name} description={p.description ?? ''} image={p.cover_image} path={`/kuliner/${p.slug}`} {jsonLd} />
 
 <div class="relative aspect-square w-full overflow-hidden md:aspect-[10/3]">
 	<img src={imgCover(p.cover_image)} alt={`Foto ${p.name}`} class="h-full w-full object-cover" />

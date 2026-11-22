@@ -65,35 +65,52 @@
 		{/if}
 		<h3 class="mt-1 line-clamp-2 font-bold leading-snug">{place.name}</h3>
 
+		{#if place.type === 'villa' && place.jumlah_kamar_tidur}
+			<div class="mt-1 flex items-center gap-1 text-xs text-ink/65">
+				<svg class="h-3.5 w-3.5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+				</svg>
+				<span>{place.jumlah_kamar_tidur} Kamar</span>
+			</div>
+		{/if}
+
 		{#if place.type === 'villa'}
-			<div class="mt-auto pt-3 text-sm">
+			<div class="mt-auto pt-2.5 text-sm">
 				{#if place.status === 'disewakan'}
 					{#if place.is_promo && place.promo_harga_sewa_weekday}
-						<div class="text-xs text-ink/60 line-through">
+						<div class="text-[11px] text-ink/60 line-through">
 							{formatRupiah(place.harga_sewa_weekday)} / malam
 						</div>
 						<div class="font-bold text-brand">
 							{formatRupiah(place.promo_harga_sewa_weekday)}
-							<span class="text-xs font-normal text-ink/70">/ malam (weekday)</span>
+							<span class="text-[11px] font-normal text-ink/70">/ mlm</span>
 						</div>
-						<div class="text-xs text-ink/70">
-							Weekend: {formatRupiah(place.promo_harga_sewa_weekend)}
-						</div>
-					{:else}
+						{#if place.promo_harga_sewa_weekend}
+							<div class="text-[11px] text-ink/70">
+								Weekend: {formatRupiah(place.promo_harga_sewa_weekend)}
+							</div>
+						{/if}
+					{:else if place.harga_sewa_weekday}
 						<div class="font-bold text-brand">
 							{formatRupiah(place.harga_sewa_weekday)}
-							<span class="text-xs font-normal text-ink/70">/ malam (weekday)</span>
+							<span class="text-[11px] font-normal text-ink/70">/ malam</span>
 						</div>
-						<div class="text-xs text-ink/70">
-							Weekend: {formatRupiah(place.harga_sewa_weekend)}
-						</div>
+						{#if place.harga_sewa_weekend}
+							<div class="text-[11px] text-ink/70">
+								Weekend: {formatRupiah(place.harga_sewa_weekend)}
+							</div>
+						{/if}
+					{:else}
+						<div class="text-xs font-semibold text-brand">Hubungi Kami</div>
 					{/if}
 				{:else if place.status === 'dijual'}
 					{#if place.is_promo && place.harga_promo}
-						<div class="text-xs text-ink/60 line-through">{formatRupiah(place.harga_jual)}</div>
+						<div class="text-[11px] text-ink/60 line-through">{formatRupiah(place.harga_jual)}</div>
 						<div class="font-bold text-brand">{formatRupiah(place.harga_promo)}</div>
-					{:else}
+					{:else if place.harga_jual}
 						<div class="font-bold text-brand">{formatRupiah(place.harga_jual)}</div>
+					{:else}
+						<div class="text-xs font-semibold text-brand">Hubungi Kami</div>
 					{/if}
 				{/if}
 			</div>
